@@ -1,6 +1,5 @@
 /* Includes needed by libpty*/
 #ifndef __PTY_INT_H__
-#include <pty_err.h>
 #include <sys/types.h>
 
 #if defined(_AIX) && defined(_THREAD_SAFE)

@@ -33,6 +33,8 @@
 
 /* based on @(#)strrchr.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #ifdef	HAVE_STRING_H
 #include <string.h>
 #else

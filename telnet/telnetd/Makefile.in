@@ -1,7 +1,5 @@
-thisconfigdir=..
-myfulldir=appl/telnet/telnetd
-mydir=telnetd
-BUILDTOP=$(REL)..$(S)..$(S)..
+mydir=telnet/telnetd
+BUILDTOP=$(REL)..$(S)..
 # derived from the original Makefile.generic
 #
 # Copyright (c) 1991 The Regents of the University of California.
@@ -24,7 +22,7 @@ BUILDTOP=$(REL)..$(S)..$(S)..
 #	@(#)Makefile.generic	5.5 (Berkeley) 3/1/91
 #
 
-AUTH_DEF=-DAUTHENTICATION -DENCRYPTION -DKRB5 -DFORWARD -UNO_LOGIN_F -ULOGIN_CAP_F -DLOGIN_PROGRAM=KRB5_PATH_LOGIN
+AUTH_DEF=-DAUTHENTICATION -DENCRYPTION -DKRB5 -DFORWARD -UNO_LOGIN_F -ULOGIN_CAP_F -DLOGIN_PROGRAM=\"$(SERVER_BINDIR)/login.krb5\"
 OTHERDEFS=-DKLUDGELINEMODE -DDIAGNOSTICS -DENV_HACK -DOLD_ENVIRON
 LOCALINCLUDES=-I.. -I$(srcdir)/..
 DEFINES = -DTELNET_BUFSIZE=65535 $(AUTH_DEF) $(OTHERDEFS)
@@ -60,8 +58,8 @@ OBJS=	telnetd.o \
 
 all:: telnetd
 
-telnetd: $(OBJS) $(PTY_DEPLIB) $(KRB5_BASE_DEPLIBS) ../libtelnet/libtelnet.a
-	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS)
+telnetd: $(OBJS) $(PTY_DEPLIB) ../libtelnet/libtelnet.a
+	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(LIBS)
 
 clean::
 	$(RM) telnetd

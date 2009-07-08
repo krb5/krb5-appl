@@ -33,6 +33,8 @@
 
 /* baesd on @(#)sys_term.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #include "telnetd.h"
 #include "pathnames.h"
 #include <com_err.h>
@@ -47,7 +49,8 @@
 #endif
 
 #if	defined(KRB5)
-#include "k5-int.h"
+#include <krb5.h>
+#include "k5-platform.h"
 #endif
 
 char *login_program = LOGIN_PROGRAM;
@@ -936,7 +939,7 @@ getptyslave()
 
 	if ( (retval = pty_open_slave (line, &t)) != 0 )
 	    {
-		fatalperror(net,  error_message(retval));
+		fatalperror(net, pty_error_message(retval));
 	    }
 
 #ifdef  STREAMSPTY

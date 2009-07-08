@@ -103,6 +103,8 @@ char copyright[] =
  *       Note:  Root logins are always logged.
  */
 
+#include <autoconf.h>
+
 /*
  * This is usually done in the Makefile.  Actually, these sources may
  * not work without the KERBEROS #defined.
@@ -228,11 +230,11 @@ struct winsize {
 
 #ifdef KERBEROS
      
-#include "k5-int.h"
+#include <krb5.h>
+#include <k5-platform.h>
 #include <libpty.h>
 #ifdef HAVE_UTMP_H
 #include <utmp.h>
-#include <k5-util.h>
 #endif
 
 int non_privileged = 0; /* set when connection is seen to be from */
@@ -642,7 +644,8 @@ void doit(f, fromp)
     
     write(f, "", 1);
     if ((retval = pty_getpty(&p,line, sizeof(line)))) {
-	com_err(progname, retval, "while getting master pty");
+	fprintf(stderr, "%s: %s while getting master pty\n", progname,
+		pty_error_message(retval));
 	exit(2);
     }
     
@@ -669,7 +672,7 @@ void doit(f, fromp)
 	struct sgttyb b;
 #endif /* POSIX_TERMIOS */
 	if ((retval = pty_open_slave(line, &t))) {
-	    fatal(f, error_message(retval));
+	    fatal(f, pty_error_message(retval));
 	    exit(1);
 	}
 	

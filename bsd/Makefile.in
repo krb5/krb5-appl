@@ -1,22 +1,18 @@
-thisconfigdir=.
-myfulldir=appl/bsd
-mydir=.
-BUILDTOP=$(REL)..$(S)..
-PROG_LIBPATH=-L$(TOPLIBD)
-PROG_RPATH=$(KRB5_LIBDIR)
+mydir=bsd
+BUILDTOP=$(REL)..
 
 SETENVSRC=@SETENVSRC@
 SETENVOBJ=@SETENVOBJ@
 
 LOGINLIBS=@LOGINLIBS@
-LIBOBJS=@LIBOBJS@
+GETDOBJ=@GETDOBJ@
 KRSHDLIBS=@KRSHDLIBS@
 
 SRCS= $(srcdir)/krcp.c $(srcdir)/krlogin.c $(srcdir)/krsh.c $(srcdir)/kcmd.c \
 	$(srcdir)/forward.c $(srcdir)/login.c $(srcdir)/krshd.c \
 	$(srcdir)/krlogind.c
 OBJS= krcp.o krlogin.o krsh.o kcmd.o forward.o $(SETENVOBJ) login.o krshd.o \
-	krlogind.o $(LIBOBJS)
+	krlogind.o $(GETDOBJS)
 
 UCB_RLOGIN = @UCB_RLOGIN@
 UCB_RSH = @UCB_RSH@
@@ -35,14 +31,14 @@ all:: rsh rcp rlogin kshd klogind login.krb5
 clean:: 
 	$(RM) rsh rcp rlogin kshd klogind login.krb5
 
-rsh: krsh.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_DEPLIBS)
-	$(CC_LINK) -o rsh krsh.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_LIBS)
+rsh: krsh.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS)
+	$(CC_LINK) -o rsh krsh.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(KRB5_BASE_LIBS) $(LIBS)
 
-rcp: krcp.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_DEPLIBS)
-	$(CC_LINK) -o rcp krcp.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_LIBS)
+rcp: krcp.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS)
+	$(CC_LINK) -o rcp krcp.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(KRB5_BASE_LIBS) $(LIBS)
 
-rlogin: krlogin.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_DEPLIBS)
-	$(CC_LINK) -o rlogin krlogin.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRB5_BASE_LIBS)
+rlogin: krlogin.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS)
+	$(CC_LINK) -o rlogin krlogin.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(KRB5_BASE_LIBS) $(LIBS)
 
 install::
 	for f in rsh rcp rlogin; do \
@@ -53,11 +49,11 @@ install::
 	  ) || exit 1; \
 	done
 
-kshd: krshd.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(PTY_DEPLIB) $(KRB5_BASE_DEPLIBS) $(APPUTILS_DEPLIB)
-	$(CC_LINK) -o kshd krshd.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(KRSHDLIBS) $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(APPUTILS_LIB)
+kshd: krshd.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(PTY_DEPLIB)
+	$(CC_LINK) -o kshd krshd.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(KRSHDLIBS) $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(LIBS)
 
-klogind: krlogind.o kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(PTY_DEPLIB) $(KRB5_BASE_DEPLIBS) $(APPUTILS_DEPLIB)
-	$(CC_LINK) -o klogind krlogind.o  kcmd.o forward.o $(SETENVOBJ) $(LIBOBJS) $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(APPUTILS_LIB)
+klogind: krlogind.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(PTY_DEPLIB)
+	$(CC_LINK) -o klogind krlogind.o  kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(LIBS)
 
 install::
 	for f in kshd klogind; do \
@@ -71,8 +67,8 @@ install::
 # No program name transformation is done with login.krb5 since it is directly
 # referenced by klogind.
 #
-login.krb5: login.o  $(SETENVOBJ) $(LIBOBJS) $(PTY_DEPLIB) $(KRB5_BASE_DEPLIBS)
-	$(CC_LINK) -o login.krb5 login.o $(SETENVOBJ) $(LIBOBJS) $(LOGINLIBS) $(PTY_LIB) $(KRB5_BASE_LIBS)
+login.krb5: login.o  $(SETENVOBJ) $(GETDOBJS) $(PTY_DEPLIB)
+	$(CC_LINK) -o login.krb5 login.o $(SETENVOBJ) $(GETDOBJS) $(LOGINLIBS) $(PTY_LIB) $(KRB5_BASE_LIBS) $(LIBS)
 
 install::
 	$(INSTALL_PROGRAM) login.krb5 $(DESTDIR)$(SERVER_BINDIR)/login.krb5

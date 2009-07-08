@@ -33,6 +33,8 @@
 
 /* based on @(#)spx.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #ifdef	SPX
 /*
  * COPYRIGHT (C) 1990 DIGITAL EQUIPMENT CORPORATION

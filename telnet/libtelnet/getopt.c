@@ -33,9 +33,8 @@
 
 /* based on @(#)getopt.c	8.1 (Berkeley) 6/4/93 */
 
-#ifndef __STDC__
-#define const
-#endif
+#include <autoconf.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

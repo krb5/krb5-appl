@@ -25,7 +25,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "k5-int.h"
+#include <krb5.h>
+#include <k5-platform.h>
 
 #include "defines.h"
 

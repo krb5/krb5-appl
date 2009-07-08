@@ -1,7 +1,5 @@
-thisconfigdir=..
-myfulldir=appl/telnet/telnet
-mydir=telnet
-BUILDTOP=$(REL)..$(S)..$(S)..
+mydir=telnet/telnet
+BUILDTOP=$(REL)..$(S)..
 # derived from the original Makefile.generic
 #
 # Copyright (c) 1991 The Regents of the University of California.
@@ -47,8 +45,8 @@ OBJS=	authenc.o commands.o main.o network.o ring.o sys_bsd.o \
 
 all:: telnet
 
-telnet:	$(OBJS) $(KRB5_BASE_DEPLIBS) ../libtelnet/libtelnet.a
-	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(KRB5_BASE_LIBS)
+telnet:	$(OBJS) ../libtelnet/libtelnet.a
+	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(KRB5_BASE_LIBS) $(LIBS)
 
 clean::
 	$(RM) telnet

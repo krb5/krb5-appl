@@ -39,6 +39,8 @@ static char sccsid[] = "@(#)glob.c	5.9 (Berkeley) 2/25/91";
  * C-shell glob for random programs.
  */
 
+#include <autoconf.h>
+
 #include <sys/stat.h>
 
 #include <errno.h>

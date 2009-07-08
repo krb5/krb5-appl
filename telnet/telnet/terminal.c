@@ -33,6 +33,8 @@
 
 /* based on @(#)terminal.c	8.1 (Berkeley) 6/6/93 */
 
+#include <autoconf.h>
+
 #include <arpa/telnet.h>
 #include <sys/types.h>
 

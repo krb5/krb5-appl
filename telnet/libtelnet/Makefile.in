@@ -1,7 +1,5 @@
-thisconfigdir=..
-myfulldir=appl/telnet/libtelnet
-mydir=libtelnet
-BUILDTOP=$(REL)..$(S)..$(S)..
+mydir=telnet/libtelnet
+BUILDTOP=$(REL)..$(S)..
 # derived from the original Makefile.generic
 #
 # Copyright (c) 1991 The Regents of the University of California.
@@ -29,7 +27,6 @@ LOCALINCLUDES=-I.. -I$(srcdir)/..
 DEFINES = -DTELNET_BUFSIZE=65535 $(AUTH_DEF)
 LIBOBJS=@LIBOBJS@
 
-SETENVSRC=@SETENVSRC@
 SETENVOBJ=@SETENVOBJ@
 
 LIBBASE=telnet
@@ -55,15 +52,20 @@ SRCS=   $(srcdir)/auth.c \
 	$(srcdir)/strftime.c \
 	$(srcdir)/strerror.c
 
-STLIBOBJS=   auth.o encrypt.o genget.o \
+OBJS=   auth.o encrypt.o genget.o \
 	misc.o kerberos5.o forward.o enc_des.o \
 	$(LIBOBJS) getent.o $(SETENVOBJ)
 
 TELNET_H= $(srcdir)/../arpa/telnet.h
 
-all:: all-libs
+all:: libtelnet.a
 
-clean:: clean-libs clean-libobjs
+libtelnet.a: $(OBJS)
+	$(RM) $@
+	$(AR) cq $@ $(OBJS)
+	$(RANLIB) $@
+
+clean::
 
 auth.o: $(TELNET_H)
 auth.o: encrypt.h
@@ -81,9 +83,3 @@ enc_des.o: $(TELNET_H)
 enc_des.o: encrypt.h
 enc_des.o: key-proto.h
 enc_des.o: misc-proto.h
-install::
-
-@libpriv_frag@
-@lib_frag@
-@libobj_frag@
-

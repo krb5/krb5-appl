@@ -6,6 +6,8 @@
 
 /* based on @(#)gettytab.c	5.1 (Berkeley) 4/29/85 */
 
+#include <autoconf.h>
+
 #include <ctype.h>
 
 #define	TABBUFSIZ	512

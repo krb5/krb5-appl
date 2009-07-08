@@ -41,10 +41,7 @@
    @(#)memmove.c	8.1 (Berkeley) 6/4/93
  */
 
-#ifndef	__STDC__
-#define	const
-#endif
-typedef int size_t;
+#include <autoconf.h>
 
 #include <sys/types.h>
 #include <sys/cdefs.h>

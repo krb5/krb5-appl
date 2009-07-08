@@ -3,7 +3,7 @@
  * secure read(), write(), getc(), and putc().
  * Only one security context, thus only work on one fd at a time!
  */
-#include "autoconf.h"
+#include <autoconf.h>
 
 #ifdef GSSAPI
 #include <gssapi/gssapi.h>
@@ -11,7 +11,7 @@
 extern gss_ctx_id_t gcontext;
 #endif /* GSSAPI */
 
-#include <secure.h>	/* stuff which is specific to client or server */
+#include "secure.h"	/* stuff which is specific to client or server */
 
 #ifdef _WIN32
 #undef ERROR

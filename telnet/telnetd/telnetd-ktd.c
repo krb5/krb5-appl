@@ -39,6 +39,8 @@ char copyright[] =
 
 /* based on @(#)telnetd.c	5.51 (Berkeley) 1/21/93 */
 
+#include <autoconf.h>
+
 #include "telnetd.h"
 #include "pathnames.h"
 
@@ -703,7 +705,7 @@ doit(who)
 	 * Find an available pty to use.
 	 */
 	if ( (retval = pty_getpty(&pty, line, sizeof(line)) < 0 ) {
-	    com_err(retval, "telnetd", "");
+		fatal(net, pty_error_message(retval));
 	    
 	if (pty < 0)
 		fatal(net, "All network ports in use");

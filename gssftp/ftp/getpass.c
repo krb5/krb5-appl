@@ -8,6 +8,8 @@
 static	char sccsid[] = "@(#)getpass.c 1.1 90/04/28 SMI"; /* from UCB 5.4 3/7/86 */
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #ifdef _WIN32
 #include <io.h>
 #include <windows.h>

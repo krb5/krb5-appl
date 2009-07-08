@@ -23,6 +23,8 @@
 /* General-purpose forwarding routines. These routines may be put into */
 /* libkrb5.a to allow widespread use */ 
 
+#include <autoconf.h>
+
 #if defined(KERBEROS) || defined(KRB5)
 #include <stdio.h>
 #include <netdb.h>

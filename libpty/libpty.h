@@ -27,9 +27,24 @@
 #define PTY_USER_PROCESS 1
 #define PTY_DEAD_PROCESS 2
 
-/* flags to update_utmp*/
+/* Flags to update_utmp */
 #define PTY_TTYSLOT_USABLE (0x1)
 #define PTY_UTMP_USERNAME_VALID (0x2)
+
+/* Return codes */
+#define PTY_GETPTY_STREAMS 1
+#define PTY_GETPTY_FSTAT 2
+#define PTY_GETPTY_NOPTY 3
+#define PTY_GETPTY_SLAVE_TOOLONG 4
+#define PTY_OPEN_SLAVE_OPENFAIL 5
+#define PTY_OPEN_SLAVE_CHMODFAIL 6
+#define PTY_OPEN_SLAVE_NOCTTY 7
+#define PTY_OPEN_SLAVE_CHOWNFAIL 8
+#define PTY_OPEN_SLAVE_LINE_PUSHFAIL 9
+#define PTY_OPEN_SLAVE_PUSH_FAIL 10
+#define PTY_OPEN_SLAVE_REVOKEFAIL 11
+#define PTY_UPDATE_UTMP_PROCTYPE_INVALID 12
+#define PTY_OPEN_SLAVE_TOOSHORT 13
 
 long pty_init(void);
 long pty_getpty ( int *fd, char *slave, int slavelength);
@@ -50,5 +65,8 @@ struct sockaddr;
 #endif
 
 long pty_make_sane_hostname(const struct sockaddr *, int, int, int, char **);
+
+const char *pty_error_message(long code);
+
 #define __LIBPTY_H__
 #endif

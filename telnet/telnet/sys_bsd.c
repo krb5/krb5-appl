@@ -38,6 +38,7 @@
  * (at least between 4.x and dos) which is used in telnet.c.
  */
 
+#include <autoconf.h>
 
 #include <fcntl.h>
 #include <sys/types.h>

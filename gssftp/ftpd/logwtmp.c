@@ -36,6 +36,8 @@
 static char sccsid[] = "@(#)logwtmp.c	5.7 (Berkeley) 2/25/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>

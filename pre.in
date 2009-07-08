@@ -1,0 +1,236 @@
+############################################################
+## config/pre.in
+## common prefix for all Makefile.in in the Kerberos V5 tree.
+##
+
+# These are set per-directory by autoconf 2.52 and 2.53:
+#  srcdir=@srcdir@
+#  top_srcdir=@top_srcdir@
+# but these are only set by autoconf 2.53, and thus not useful to us on
+# Mac OS X yet (as of 10.2):
+#  abs_srcdir=@abs_srcdir@
+#  abs_top_srcdir=@abs_top_srcdir@
+#  builddir=@builddir@
+#  abs_builddir=@abs_builddir@
+#  top_builddir=@top_builddir@
+#  abs_top_builddir=@abs_top_builddir@
+# The "top" variables refer to the directory with the configure (or
+# config.status) script.
+
+SHELL=/bin/sh
+
+##############################
+# Recursion rule support
+#
+
+# The commands for the recursion targets live in config/post.in.
+#
+# General form of recursion rules:
+#
+# Each recursive target foo has related targets: foo-prerecurse,
+# foo-recurse, and foo-postrecurse
+#
+# The foo-recurse rule is in post.in.  It is what actually recursively
+# calls make.
+#
+# foo-recurse depends on foo-prerecurse, so any targets that must be
+# built before descending into subdirectories must be dependencies of
+# foo-prerecurse.
+#
+# foo-postrecurse depends on foo-recurse, but targets that must be
+# built after descending into subdirectories should be have
+# foo-recurse as dependencies in addition to being listed under
+# foo-postrecurse, to avoid ordering issues.
+#
+# The foo-prerecurse, foo-recurse, and foo-postrecurse rules are all
+# single-colon rules, to avoid nasty ordering problems with
+# double-colon rules.
+#
+# e.g.
+# all:: includes foo
+# foo:
+#	echo foo
+# includes::
+#	echo bar
+# includes::
+#	echo baz
+#
+# will result in "bar", "foo", "baz" on AIX, and possibly others.
+all:: all-postrecurse
+all-postrecurse: all-recurse
+all-recurse: all-prerecurse
+
+all-prerecurse:
+all-postrecurse:
+
+clean:: clean-postrecurse
+clean-postrecurse: clean-recurse
+clean-recurse: clean-prerecurse
+
+clean-prerecurse:
+clean-postrecurse:
+
+distclean: distclean-postrecurse
+distclean-postrecurse: distclean-recurse
+distclean-recurse: distclean-prerecurse
+
+distclean-prerecurse:
+distclean-postrecurse:
+
+install:: install-postrecurse
+install-postrecurse: install-recurse
+install-recurse: install-prerecurse
+
+install-prerecurse:
+install-postrecurse:
+
+install-headers:: install-headers-postrecurse
+install-headers-postrecurse: install-headers-recurse
+install-headers-recurse: install-headers-prerecurse
+
+install-headers-prerecurse:
+install-headers-postrecurse:
+
+check:: check-postrecurse
+check-postrecurse: check-recurse
+check-recurse: check-prerecurse
+
+check-prerecurse:
+check-postrecurse:
+
+Makefiles: Makefiles-postrecurse
+Makefiles-postrecurse: Makefiles-recurse
+Makefiles-recurse: Makefiles-prerecurse
+
+Makefiles-prerecurse:
+Makefiles-postrecurse:
+
+#
+# end recursion rule support
+##############################
+
+# Directory syntax:
+#
+# begin relative path
+REL=
+# this is magic... should only be used for preceding a program invocation
+C=./
+# "/" for UNIX, "\" for Windows; *sigh*
+S=/
+
+#
+srcdir = @srcdir@
+SRCTOP = @srcdir@/$(BUILDTOP)
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+CONFIG_RELTOPDIR = @CONFIG_RELTOPDIR@
+
+# top_srcdir for k5-platform.h etc.
+# top_srcdir/libpty for libpty.h
+# BUILDTOP for autoconf.h
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libpty -I$(BUILDTOP)
+
+# DEFINES	set by local Makefile.in
+# LOCALINCLUDES	set by local Makefile.in
+# CPPFLAGS	user override
+# CFLAGS	user override but starts off set by configure
+# WARN_CFLAGS	user override but starts off set by configure
+ALL_CFLAGS = $(DEFINES) $(KRB5_CFLAGS) $(LOCALINCLUDES) $(INCLUDES) \
+	$(CPPFLAGS) $(CFLAGS) $(WARN_CFLAGS)
+
+CFLAGS = @CFLAGS@
+CXXFLAGS = @CXXFLAGS@
+WARN_CFLAGS = @WARN_CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+CC = @CC@
+LD = $(PURE) @LD@
+AR = @AR@
+KRB5_CFLAGS = @KRB5_CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+
+INSTALL=@INSTALL@
+INSTALL_STRIP=
+INSTALL_PROGRAM=@INSTALL_PROGRAM@ $(INSTALL_STRIP)
+INSTALL_DATA=@INSTALL_DATA@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datarootdir=@datarootdir@
+SHLIB_TAIL_COMP=@SHLIB_TAIL_COMP@
+
+datadir = @datadir@
+EXAMPLEDIR = $(datadir)/examples/krb5
+
+KRB5MANROOT = @mandir@
+SERVER_BINDIR = @sbindir@
+CLIENT_BINDIR =@bindir@
+SERVER_MANDIR = $(KRB5MANROOT)/man8
+CLIENT_MANDIR = $(KRB5MANROOT)/man1
+
+# Dejagnu variables.
+# We have to set the host with --host so that setup_xfail will work.
+# If we don't set it, then the host type used is "native", which
+# doesn't match "*-*-*".
+host=@krb5_cv_host@
+DEJAFLAGS	= $(DEJALFLAGS) $(CLFLAGS) --debug --srcdir $(srcdir) --host \
+		   $(host)
+RUNTEST		= runtest $(DEJAFLAGS)
+
+transform = @program_transform_name@
+
+RM = rm -f
+CP = cp
+MV = mv -f
+CHMOD=chmod
+RANLIB = @RANLIB@
+ARCHIVE = @ARCHIVE@
+ARADD = @ARADD@
+LN = @LN_S@
+AWK = @AWK@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+YACC = @YACC@
+PERL = @PERL@
+AUTOCONF = autoconf
+AUTOCONFFLAGS =
+AUTOHEADER = autoheader
+AUTOHEADERFLAGS =
+MOVEIFCHANGED = $(SRCTOP)/config/move-if-changed
+
+KRB5_BASE_LIBS = @KRB5_BASE_LIBS@
+GSS_LIBS = @GSS_LIBS@
+PTY_DEPLIB = $(BUILDTOP)/libpty/libpty.a
+PTY_LIB = -L$(BUILDTOP)/libpty -lpty
+
+# libutil for NetBSD, et al. for openpty(), etc.
+UTIL_LIB	= @UTIL_LIB@
+
+OBJEXT = o
+LIBEXT = a
+EXEEXT =
+
+CC_LINK=$(CC) $(CFLAGS) $(LDFLAGS)
+
+# variables for --with-tcl=
+TCL_LIBS	= @TCL_LIBS@
+TCL_LIBPATH	= @TCL_LIBPATH@
+TCL_RPATH	= @TCL_RPATH@
+TCL_MAYBE_RPATH = @TCL_MAYBE_RPATH@
+TCL_INCLUDES	= @TCL_INCLUDES@
+
+# rule to make object files
+#
+.SUFFIXES: .cpp .c .o
+.c.o:
+	$(CC) $(ALL_CFLAGS) -c $<
+
+VALGRIND=
+# Need absolute paths here because under kshd or ftpd we may run programs
+# while in other directories.
+VALGRIND_LOGDIR = `cd $(BUILDTOP)&&pwd`
+VALGRIND1 = valgrind --tool=memcheck --log-file=$(VALGRIND_LOGDIR)/vg --trace-children=yes -v --leak-check=yes --suppressions=`cd $(SRCTOP)&&pwd`/tests/valgrind-suppressions
+
+##
+## end of pre.in
+############################################################

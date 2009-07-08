@@ -35,6 +35,8 @@
 static char sccsid[] = "@(#)cmdtab.c	5.10 (Berkeley) 6/1/90";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #include <stdio.h>
 #include "ftp_var.h"
 

@@ -35,6 +35,8 @@
 static char sccsid[] = "@(#)domacro.c	1.8 (Berkeley) 9/28/90";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #include <stdio.h>
 #include <signal.h>
 

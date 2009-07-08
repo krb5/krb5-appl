@@ -33,6 +33,8 @@
 
 /* based on @(#)utility.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #include <stdarg.h>
 #define PRINTOPTIONS
 #include "telnetd.h"

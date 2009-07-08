@@ -33,6 +33,8 @@
 
 /* based on @(#)network.c	8.1 (Berkeley) 6/6/93 */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>

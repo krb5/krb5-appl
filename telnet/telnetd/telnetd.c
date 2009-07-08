@@ -39,6 +39,8 @@ static char copyright[] =
 
 /* based on @(#)telnetd.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #include "telnetd.h"
 #include "pathnames.h"
 
@@ -959,7 +961,7 @@ static void doit(who)
 	
 
 	if ((retval = pty_getpty(&pty, line, 17)) != 0) {
-		fatal(net, error_message(retval));
+		fatal(net, pty_error_message(retval));
 	}
 
 #if	defined(_SC_CRAY_SECURE_SYS)
@@ -982,7 +984,7 @@ static void doit(who)
 					stripdomain, always_ip,
 					&rhost_sane);
 	if (retval) {
-		fatal(net, error_message(retval));
+		fatal(net, pty_error_message(retval));
 	}
 	if (registerd_host_only) {
 	    /* Get name of connected client -- but we don't actually

@@ -31,9 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __STDC__
-#define const
-#endif
+#include <autoconf.h>
 
 #include <sys/types.h>
 #ifdef HAVE_STRING_H

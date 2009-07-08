@@ -1,7 +1,7 @@
 /*
  * pty_init: Initialize internal state of pty.
  * 
- * Currently initializes error tables.
+ * Currently does nothing.
  * 
  * Copyright 1995 by the Massachusetts Institute of Technology.
  *
@@ -28,6 +28,5 @@
 
 long pty_init(void)
 {
-    initialize_pty_error_table();
     return 0;
 }

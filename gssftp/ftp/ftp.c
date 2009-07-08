@@ -61,6 +61,8 @@
 static char sccsid[] = "@(#)ftp.c	5.38 (Berkeley) 4/22/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #ifdef _WIN32
 #include <windows.h>
 #include <winsock2.h>

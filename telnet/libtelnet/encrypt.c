@@ -56,6 +56,8 @@
  * or implied warranty.
  */
 
+#include <autoconf.h>
+
 #ifdef	ENCRYPTION
 
 #include <stdio.h>

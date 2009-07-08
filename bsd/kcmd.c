@@ -89,7 +89,8 @@
 #include <netdb.h>
 
 #include <errno.h>
-#include "k5-int.h"
+#include <krb5.h>
+#include <k5-platform.h>
 
 #include "defines.h"
 
@@ -1020,13 +1021,14 @@ int default_realm(principal)
 {
     char *def_realm;
     int retval;
-    
+    krb5_data *realm = krb5_princ_realm(bsd_context, principal);
+
     if ((retval = krb5_get_default_realm(bsd_context, &def_realm))) {
 	return 0;
     }
 
-    if (!data_eq_string(*krb5_princ_realm(bsd_context, principal),
-			def_realm)) {
+    if (realm->length != strlen(def_realm) ||
+	memcmp(realm->data, def_realm, realm->length) != 0) {
 	free(def_realm);
 	return 0;
     }	

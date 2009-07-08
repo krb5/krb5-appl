@@ -60,6 +60,7 @@
  * or implied warranty.
  */
 
+#include <autoconf.h>
 
 #ifdef	KRB5
 #include <arpa/telnet.h>

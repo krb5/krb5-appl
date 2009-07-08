@@ -59,6 +59,8 @@
 
 /* based on @(#)enc_des.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #ifdef	ENCRYPTION
 # ifdef	AUTHENTICATION
 #  ifdef DES_ENCRYPTION

@@ -1,10 +1,6 @@
-thisconfigdir=./..
-myfulldir=appl/gssftp/ftp
-mydir=ftp
-BUILDTOP=$(REL)..$(S)..$(S)..
-#
-# appl/gssftp/ftp/Makefile.in
-#
+mydir=gssftp/ftp
+BUILDTOP=$(REL)..$(S)..
+
 DEFINES = -DGSSAPI -DFTP_BUFSIZ=65535
 PROG_LIBPATH=-L$(TOPLIBD)
 PROG_RPATH=$(KRB5_LIBDIR)
@@ -21,24 +17,24 @@ OBJS	= $(OUTPRE)cmds.$(OBJEXT) $(OUTPRE)cmdtab.$(OBJEXT) \
 	  $(OUTPRE)main.$(OBJEXT) $(OUTPRE)radix.$(OBJEXT) \
 	  $(OUTPRE)ruserpass.$(OBJEXT) $(OUTPRE)secure.$(OBJEXT)
 
-LOCALINCLUDES = -I$(srcdir)/.. -I$(srcdir)
+LOCALINCLUDES = -I$(srcdir)/..
 
-all-unix::	ftp
+all::	ftp
 all-windows::	$(OUTPRE)ftp.exe
 
-ftp:	$(OBJS) $(GSS_DEPLIBS) $(KRB5_BASE_DEPLIBS)
-	$(CC_LINK) -o ftp $(OBJS) $(GSS_LIBS) $(KRB5_BASE_LIBS)
+ftp:	$(OBJS)
+	$(CC_LINK) -o ftp $(OBJS) $(GSS_LIBS) $(LIBS)
 
 $(OUTPRE)ftp.exe: $(OBJS) $(GLIB) $(KLIB)
 	link $(EXE_LINKOPTS) -out:$@ $** ws2_32.lib advapi32.lib $(SCLIB)
 	$(_VC_MANIFEST_EMBED_EXE)
 
-clean-unix::
+clean::
 	$(RM) ftp
 
 depend::
 
-install-unix::
+install::
 	for f in ftp; do \
 	  $(INSTALL_PROGRAM) $$f \
 		$(DESTDIR)$(CLIENT_BINDIR)/`echo $$f|sed '$(transform)'`; \

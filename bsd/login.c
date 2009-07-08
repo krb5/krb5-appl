@@ -25,6 +25,8 @@ char copyright[] =
  All rights reserved.\n";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 /* based on @(#)login.c	5.25 (Berkeley) 1/6/89 */
 
 /* The configuration, with defaults as listed, is of the form:
@@ -138,11 +140,11 @@ typedef sigtype (*handler)();
 #endif
 
 #ifdef KRB5_GET_TICKETS
-/* #include "krb5.h" */
-/* need k5-int.h to get ->profile from krb5_context */
-#include "k5-int.h"
+#include <krb5.h>
+#include <profile.h>
+#include <k5-platform.h>
 #include "com_err.h"
-#include "osconf.h"
+#define KRB5_ENV_CCNAME "KRB5CCNAME"
 #endif /* KRB5_GET_TICKETS */
 
 #ifndef __STDC__
@@ -349,11 +351,13 @@ static void login_get_kconf(k)
 
     max_i = sizeof(login_conf_set)/sizeof(struct login_confs);
     for (i = 0; i<max_i; i++) {
+	profile_t profile;
 	kconf_names[0] = "login";
 	kconf_names[1] = login_conf_set[i].flagname;
 	kconf_names[2] = 0;
-	retval = profile_get_values(k->profile, 
-				    kconf_names, &kconf_val);
+	retval = krb5_get_profile(k, &profile);
+	if (retval == 0)
+	    retval = profile_get_values(profile, kconf_names, &kconf_val);
 	if (retval) {
 	    /* ignore most (all?) errors */
 	} else if (kconf_val && *kconf_val) {

@@ -33,6 +33,8 @@
 
 /* based on @(#)utilities.c	8.1 (Berkeley) 6/6/93 */
 
+#include <autoconf.h>
+
 #define	TELOPTS
 #define	TELCMDS
 #define	SLC_NAMES

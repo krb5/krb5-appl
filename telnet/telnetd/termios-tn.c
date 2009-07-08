@@ -1,3 +1,5 @@
+#include <autoconf.h>
+
 /* handle having mutually exclusive termio vs. termios */
 /* return 0 if handled */
 #ifdef	STREAMSPTY

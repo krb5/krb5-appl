@@ -33,6 +33,8 @@
 
 /* based on @(#)setsid.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 /*
  * Emulate the functionality of setsid(), called when forking
  * and execing the new process.

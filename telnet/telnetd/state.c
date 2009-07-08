@@ -33,6 +33,8 @@
 
 /* based on @(#)state.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #include "telnetd.h"
 #if	defined(AUTHENTICATION)
 #include <libtelnet/auth.h>

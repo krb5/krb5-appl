@@ -56,6 +56,7 @@
  * or implied warranty.
  */
 
+#include <autoconf.h>
 
 #if	defined(AUTHENTICATION)
 #include <stdio.h>

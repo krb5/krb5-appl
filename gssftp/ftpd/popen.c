@@ -39,6 +39,8 @@
 static char sccsid[] = "@(#)popen.c	5.9 (Berkeley) 2/25/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>

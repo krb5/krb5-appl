@@ -58,7 +58,9 @@ char copyright[] =
  *             three DEFINES.
  *       Note:  Root account access is always logged.
  */
-     
+
+#include <autoconf.h>
+
 #define SERVE_NON_KRB     
 #define LOG_REMOTE_REALM
 #define LOG_CMD
@@ -139,7 +141,7 @@ char copyright[] =
 #endif
 
 #ifdef KERBEROS
-#include "k5-int.h"
+#include <krb5.h>
 #include <com_err.h>
 #include "loginpaths.h"
 #include <k5-util.h>
@@ -758,7 +760,7 @@ void doit(f, fromp)
     status = pty_make_sane_hostname((struct sockaddr *) fromp, maxhostlen,
 				    stripdomain, always_ip, &sane_host);
     if (status) {
-	error("failed make_sane_hostname: %s\n", error_message(status));
+	error("failed make_sane_hostname: %s\n", pty_error_message(status));
 	exit(1);
     }
 

@@ -41,6 +41,8 @@ char copyright[] =
 static char sccsid[] = "@(#)main.c	5.18 (Berkeley) 3/1/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 /*
  * FTP User Program -- Command Interface.
  */

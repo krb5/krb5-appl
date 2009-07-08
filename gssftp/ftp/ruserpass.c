@@ -35,6 +35,8 @@
 static char sccsid[] = "@(#)ruserpass.c	5.3 (Berkeley) 3/1/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>

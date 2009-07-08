@@ -33,6 +33,8 @@
 
 /* based on @(#)herror.c	8.1 (Berkeley) 6/4/93 */
 
+#include <autoconf.h>
+
 #include <stdio.h>
 
 char	*h_errlist[] = {

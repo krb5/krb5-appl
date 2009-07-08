@@ -41,6 +41,8 @@
  * we will actually allocate the space.
  */
 
+#include <autoconf.h>
+
 #include "defs.h"
 #define extern
 #include "ext.h"

@@ -33,6 +33,8 @@
 
 /* based on @(#)telnet.c	8.1 (Berkeley) 6/6/93 */
 
+#include <autoconf.h>
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

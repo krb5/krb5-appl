@@ -39,6 +39,8 @@ char copyright[] =
 
 /* based on @(#)main.c	5.5 (Berkeley) 12/18/92 */
 
+#include <autoconf.h>
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

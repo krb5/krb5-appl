@@ -35,6 +35,8 @@
 static char sccsid[] = "@(#)cmds.c	5.26 (Berkeley) 3/5/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 /*
  * FTP User Program -- Command Routines.
  */

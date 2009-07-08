@@ -41,6 +41,8 @@ char copyright[] =
 static char sccsid[] = "@(#)ftpd.c	5.40 (Berkeley) 7/2/91";
 #endif /* not lint */
 
+#include <autoconf.h>
+
 /*
  * FTP server.
  */
@@ -1928,7 +1930,7 @@ dolog(sin4)
 					stripdomain, always_ip, &rhost_sane);
 	if (retval) {
 		fprintf(stderr, "make_sane_hostname: %s\n",
-			error_message(retval));
+			pty_error_message(retval));
 		exit(1);
 	}
 #ifdef SETPROCTITLE
