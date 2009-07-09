@@ -23,8 +23,6 @@ pty_paranoia: pty_paranoia.o $(COM_ERR_DEPLIB) $(PTY_DEPLIB)
 check-paranoia: pty_paranoia
 	$(VALGRIND) ./pty_paranoia
 
-install-unix:: install-libs
-
 clean::
 	$(RM) libpty.a
 
