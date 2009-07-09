@@ -35,6 +35,8 @@ clean::
 depend::
 
 install::
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(CLIENT_BINDIR)
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(CLIENT_MANDIR)
 	for f in ftp; do \
 	  $(INSTALL_PROGRAM) $$f \
 		$(DESTDIR)$(CLIENT_BINDIR)/`echo $$f|sed '$(transform)'`; \

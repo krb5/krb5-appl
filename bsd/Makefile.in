@@ -31,6 +31,12 @@ all:: rsh rcp rlogin kshd klogind login.krb5
 clean:: 
 	$(RM) rsh rcp rlogin kshd klogind login.krb5
 
+install::
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(SERVER_BINDIR)
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(SERVER_MANDIR)
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(CLIENT_BINDIR)
+	$(top_srcdir)/mkinstalldirs $(DESTDIR)$(CLIENT_MANDIR)
+
 rsh: krsh.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS)
 	$(CC_LINK) -o rsh krsh.o kcmd.o forward.o $(SETENVOBJ) $(GETDOBJS) $(KRB5_BASE_LIBS) $(LIBS)
 
