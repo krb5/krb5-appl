@@ -6,9 +6,8 @@ $(OUTPRE)telnetd.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h $(srcdir)/../arpa/telnet.h \
   $(srcdir)/../libtelnet/auth-proto.h $(srcdir)/../libtelnet/auth.h \
   $(srcdir)/../libtelnet/enc-proto.h $(srcdir)/../libtelnet/encrypt.h \
-  $(srcdir)/../libtelnet/misc-proto.h /me/base/include/com_err.h \
-  /me/base/include/krb5.h /me/base/include/krb5/krb5.h \
-  defs.h ext.h pathnames.h telnetd.c telnetd.h
+  $(srcdir)/../libtelnet/misc-proto.h defs.h ext.h pathnames.h \
+  telnetd.c telnetd.h
 $(OUTPRE)termio-tn.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   termio-tn.c
 $(OUTPRE)termios-tn.$(OBJEXT): $(BUILDTOP)/autoconf.h \
@@ -28,9 +27,7 @@ $(OUTPRE)sys_term.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/k5-platform.h $(SRCTOP)/libpty/libpty.h $(SRCTOP)/port-sockets.h \
   $(SRCTOP)/socket-utils.h $(srcdir)/../arpa/telnet.h \
   $(srcdir)/../libtelnet/auth-proto.h $(srcdir)/../libtelnet/auth.h \
-  /me/base/include/com_err.h /me/base/include/krb5.h \
-  /me/base/include/krb5/krb5.h defs.h ext.h pathnames.h \
-  sys_term.c telnetd.h
+  defs.h ext.h pathnames.h sys_term.c telnetd.h
 $(OUTPRE)utility.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h \
   $(srcdir)/../arpa/telnet.h $(srcdir)/../libtelnet/auth-proto.h \

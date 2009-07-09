@@ -1,40 +1,30 @@
 # 
 # Generated makefile dependencies follow.
 #
-$(OUTPRE)pty_err.$(OBJEXT): pty_err.c
 $(OUTPRE)cleanup.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h cleanup.c libpty.h pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h cleanup.c libpty.h pty-int.h
 $(OUTPRE)getpty.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
-  $(SRCTOP)/port-sockets.h getpty.c libpty.h pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h getpty.c libpty.h pty-int.h
 $(OUTPRE)init_slave.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h init_slave.c libpty.h pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h init_slave.c libpty.h pty-int.h
 $(OUTPRE)open_ctty.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h open_ctty.c pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h libpty.h open_ctty.c pty-int.h
 $(OUTPRE)open_slave.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h open_slave.c pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h libpty.h open_slave.c pty-int.h
 $(OUTPRE)update_utmp.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h libpty.h \
-  pty-int.h pty_err.h update_utmp.c
+  pty-int.h update_utmp.c
 $(OUTPRE)update_wtmp.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h pty-int.h pty_err.h \
-  update_wtmp.c
+  $(SRCTOP)/port-sockets.h libpty.h pty-int.h update_wtmp.c
 $(OUTPRE)vhangup.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h pty-int.h pty_err.h \
-  vhangup.c
+  $(SRCTOP)/port-sockets.h libpty.h pty-int.h vhangup.c
 $(OUTPRE)void_assoc.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h pty-int.h pty_err.h \
-  void_assoc.c
+  $(SRCTOP)/port-sockets.h libpty.h pty-int.h void_assoc.c
 $(OUTPRE)logwtmp.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  $(SRCTOP)/port-sockets.h libpty.h logwtmp.c pty-int.h \
-  pty_err.h
+  $(SRCTOP)/port-sockets.h libpty.h logwtmp.c pty-int.h
 $(OUTPRE)init.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/port-sockets.h \
-  init.c libpty.h pty-int.h pty_err.h
+  init.c libpty.h pty-int.h
+$(OUTPRE)err.$(OBJEXT): err.c libpty.h
 $(OUTPRE)sane_hostname.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/fake-addrinfo.h $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h \
-  $(SRCTOP)/socket-utils.h libpty.h pty-int.h pty_err.h \
-  sane_hostname.c
+  $(SRCTOP)/socket-utils.h libpty.h pty-int.h sane_hostname.c

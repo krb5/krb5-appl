@@ -1,31 +1,37 @@
 # 
 # Generated makefile dependencies follow.
 #
-$(OUTPRE)auth.$(OBJEXT): $(srcdir)/../arpa/telnet.h \
+$(OUTPRE)auth.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../arpa/telnet.h \
   auth-proto.h auth.c auth.h enc-proto.h encrypt.h misc-proto.h
-$(OUTPRE)encrypt.$(OBJEXT): $(srcdir)/../arpa/telnet.h \
-  enc-proto.h encrypt.c encrypt.h misc-proto.h misc.h
-$(OUTPRE)genget.$(OBJEXT): genget.c misc-proto.h misc.h
-$(OUTPRE)misc.$(OBJEXT): auth-proto.h auth.h enc-proto.h \
-  encrypt.h misc-proto.h misc.c misc.h
+$(OUTPRE)encrypt.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(srcdir)/../arpa/telnet.h enc-proto.h encrypt.c encrypt.h \
+  misc-proto.h misc.h
+$(OUTPRE)genget.$(OBJEXT): $(BUILDTOP)/autoconf.h genget.c \
+  misc-proto.h misc.h
+$(OUTPRE)misc.$(OBJEXT): $(BUILDTOP)/autoconf.h auth-proto.h \
+  auth.h enc-proto.h encrypt.h misc-proto.h misc.c misc.h
 $(OUTPRE)kerberos5.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/k5-platform.h $(srcdir)/../arpa/telnet.h \
-  /me/base/include/com_err.h /me/base/include/krb5.h \
-  /me/base/include/krb5/krb5.h auth-proto.h auth.h enc-proto.h \
-  encrypt.h kerberos5.c krb5forw.h misc-proto.h misc.h
-$(OUTPRE)forward.$(OBJEXT): /me/base/include/com_err.h \
-  /me/base/include/krb5.h /me/base/include/krb5/krb5.h \
+  auth-proto.h auth.h enc-proto.h encrypt.h kerberos5.c \
+  krb5forw.h misc-proto.h misc.h
+$(OUTPRE)forward.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   forward.c krb5forw.h
-$(OUTPRE)enc_des.$(OBJEXT): $(srcdir)/../arpa/telnet.h \
-  /me/base/include/com_err.h /me/base/include/krb5.h \
-  /me/base/include/krb5/krb5.h enc-proto.h enc_des.c \
-  encrypt.h key-proto.h misc-proto.h
-$(OUTPRE)setenv.$(OBJEXT): misc-proto.h setenv.c
-$(OUTPRE)getent.$(OBJEXT): getent.c gettytab.h
-$(OUTPRE)parsetos.$(OBJEXT): misc-proto.h parsetos.c
-$(OUTPRE)strdup.$(OBJEXT): strdup.c
-$(OUTPRE)strcasecmp.$(OBJEXT): strcasecmp.c
-$(OUTPRE)strchr.$(OBJEXT): strchr.c
-$(OUTPRE)strrchr.$(OBJEXT): strrchr.c
-$(OUTPRE)strftime.$(OBJEXT): strftime.c
-$(OUTPRE)strerror.$(OBJEXT): strerror.c
+$(OUTPRE)enc_des.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(srcdir)/../arpa/telnet.h enc-proto.h enc_des.c encrypt.h \
+  key-proto.h misc-proto.h
+$(OUTPRE)setenv.$(OBJEXT): $(BUILDTOP)/autoconf.h misc-proto.h \
+  setenv.c
+$(OUTPRE)getent.$(OBJEXT): $(BUILDTOP)/autoconf.h getent.c \
+  gettytab.h
+$(OUTPRE)parsetos.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  misc-proto.h parsetos.c
+$(OUTPRE)strdup.$(OBJEXT): $(BUILDTOP)/autoconf.h strdup.c
+$(OUTPRE)strcasecmp.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  strcasecmp.c
+$(OUTPRE)strchr.$(OBJEXT): $(BUILDTOP)/autoconf.h strchr.c
+$(OUTPRE)strrchr.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  strrchr.c
+$(OUTPRE)strftime.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  strftime.c
+$(OUTPRE)strerror.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  strerror.c

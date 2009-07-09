@@ -4,21 +4,22 @@
 $(OUTPRE)cmds.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
   $(SRCTOP)/port-sockets.h $(srcdir)/../arpa/ftp.h cmds.c \
   ftp_var.h pathnames.h
-$(OUTPRE)cmdtab.$(OBJEXT): cmdtab.c ftp_var.h
-$(OUTPRE)domacro.$(OBJEXT): domacro.c ftp_var.h
+$(OUTPRE)cmdtab.$(OBJEXT): $(BUILDTOP)/autoconf.h cmdtab.c \
+  ftp_var.h
+$(OUTPRE)domacro.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  domacro.c ftp_var.h
 $(OUTPRE)ftp.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
   $(SRCTOP)/port-sockets.h $(srcdir)/../arpa/ftp.h $(srcdir)/../arpa/telnet.h \
-  /me/base/include/com_err.h /me/base/include/gssapi/gssapi.h \
-  /me/base/include/gssapi/gssapi_ext.h /me/base/include/gssapi/gssapi_generic.h \
-  /me/base/include/gssapi/gssapi_krb5.h /me/base/include/krb5.h \
-  /me/base/include/krb5/krb5.h ftp.c ftp_var.h secure.h
-$(OUTPRE)getpass.$(OBJEXT): ftp_var.h getpass.c
+  ftp.c ftp_var.h secure.h
+$(OUTPRE)getpass.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  ftp_var.h getpass.c
 $(OUTPRE)glob.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
   ftp_var.h glob.c
 $(OUTPRE)main.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/port-sockets.h \
   $(srcdir)/../arpa/ftp.h ftp_var.h main.c
-$(OUTPRE)radix.$(OBJEXT): ftp_var.h radix.c
-$(OUTPRE)ruserpass.$(OBJEXT): ftp_var.h ruserpass.c
+$(OUTPRE)radix.$(OBJEXT): $(BUILDTOP)/autoconf.h ftp_var.h \
+  radix.c
+$(OUTPRE)ruserpass.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  ftp_var.h ruserpass.c
 $(OUTPRE)secure.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../arpa/ftp.h \
-  /me/base/include/gssapi/gssapi.h /me/base/include/gssapi/gssapi_generic.h \
   secure.c secure.h
