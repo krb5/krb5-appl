@@ -104,6 +104,11 @@ dnl new library (perhaps "libroken", according to tradition) and use
 dnl AC_REPLACE_FUNCS for all of them.  This would require moving
 dnl getenv out of setenv.c or just punting it.
 
+dnl bsd defines daemon if it is not provided.
+DAEMONOBJ=
+AC_CHECK_FUNCS(daemon,, DAEMONOBJ=daemon.o)
+AC_SUBST(DAEMONOBJ)
+
 dnl ftpd and bsd define getdtablesize if it is not provided.
 GETDOBJ=
 AC_CHECK_FUNCS(getdtablesize,, GETDOBJ=getdtablesize.o)
