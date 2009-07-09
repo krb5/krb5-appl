@@ -1,7 +1,5 @@
-thisconfigdir=..
-myfulldir=appl
-mydir=appl
-BUILDTOP=$(REL)..
+mydir=.
+BUILDTOP=$(REL)$(C)
 
 SUBDIRS= sample simple user_user gss-sample \
 	libpty bsd gssftp telnet
