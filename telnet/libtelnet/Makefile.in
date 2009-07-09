@@ -66,6 +66,7 @@ libtelnet.a: $(OBJS)
 	$(RANLIB) $@
 
 clean::
+	$(RM) libtelnet.a
 
 auth.o: $(TELNET_H)
 auth.o: encrypt.h
