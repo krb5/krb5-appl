@@ -1,0 +1,30 @@
+mydir=tests/resolve
+BUILDTOP=$(REL)..$(S)..
+PROG_LIBPATH=-L$(TOPLIBD)
+PROG_RPATH=$(KRB5_LIBDIR)
+
+OBJS=resolve.o addrinfo-test.o fake-addrinfo-test.o
+SRCS=$(srcdir)/resolve.c $(srcdir)/addrinfo-test.c \
+	$(srcdir)/fake-addrinfo-test.c
+
+all:: resolve addrinfo-test fake-addrinfo-test
+
+resolve: resolve.o
+	$(CC_LINK) -o $@ resolve.o $(LIBS)
+
+addrinfo-test: addrinfo-test.o
+	$(CC_LINK) -o $@ addrinfo-test.o $(KRB5_BASE_LIBS) $(LIBS)
+
+fake-addrinfo-test: fake-addrinfo-test.o
+	$(CC_LINK) -o $@ fake-addrinfo-test.o $(KRB5_BASE_LIBS) $(LIBS)
+
+check:: resolve addrinfo-test fake-addrinfo-test
+	$(VALGRIND) ./resolve
+	$(VALGRIND) ./addrinfo-test -p telnet
+	$(VALGRIND) ./fake-addrinfo-test -p telnet
+
+install::
+
+clean::
+	$(RM) resolve addrinfo-test fake-addrinfo-test
+

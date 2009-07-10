@@ -1,6 +1,4 @@
 mydir=.
 BUILDTOP=$(REL)$(C)
 
-SUBDIRS= sample simple user_user gss-sample \
-	libpty bsd gssftp telnet
-
+SUBDIRS= libpty bsd gssftp telnet tests

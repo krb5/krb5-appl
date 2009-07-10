@@ -169,12 +169,7 @@ SERVER_MANDIR = $(KRB5MANROOT)/man8
 CLIENT_MANDIR = $(KRB5MANROOT)/man1
 
 # Dejagnu variables.
-# We have to set the host with --host so that setup_xfail will work.
-# If we don't set it, then the host type used is "native", which
-# doesn't match "*-*-*".
-host=@krb5_cv_host@
-DEJAFLAGS	= $(DEJALFLAGS) $(CLFLAGS) --debug --srcdir $(srcdir) --host \
-		   $(host)
+DEJAFLAGS	= --debug --srcdir $(srcdir)
 RUNTEST		= runtest $(DEJAFLAGS)
 
 transform = @program_transform_name@

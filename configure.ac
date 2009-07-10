@@ -21,9 +21,13 @@ fi
 KRB5_CFLAGS=`$krb5_config --cflags`
 KRB5_BASE_LIBS=`$krb5_config --libs krb5`" -lkrb5support"
 GSS_LIBS=`$krb5_config --libs gssapi`" -lkrb5support"
+KRB5_BINDIR=`$krb5_config --exec-prefix`/bin
+KRB5_SBINDIR=`$krb5_config --exec-prefix`/sbin
 AC_SUBST(KRB5_CFLAGS)
 AC_SUBST(KRB5_BASE_LIBS)
 AC_SUBST(GSS_LIBS)
+AC_SUBST(KRB5_BINDIR)
+AC_SUBST(KRB5_SBINDIR)
 
 WITH_CC
 if test -z "$LD" ; then LD=$CC; fi
@@ -40,6 +44,7 @@ AC_PROG_YACC
 AC_CHECK_PROG(AR, ar, ar, false)
 AC_FUNC_FORK
 AC_TYPE_MODE_T
+AC_TYPE_SIGNAL
 AC_CHECK_TYPES([socklen_t, struct sockaddr_storage],,,
 [#include <sys/types.h>
 #include <sys/socket.h>
@@ -64,9 +69,9 @@ KRB5_GETSOCKNAME_ARGS
 AC_CHECK_HEADERS(curses.h lastlog.h libutil.h memory.h paths.h pty.h stdlib.h)
 AC_CHECK_HEADERS(string.h ttyent.h util.h sac.h unistd.h utmp.h utmpx.h)
 AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h)
-AC_CHECK_HEADERS(sys/filio.h sys/ioctl_compat.h sys/label.h sys/select.h)
-AC_CHECK_HEADERS(sys/sockio.h sys/stream.h sys/time.h sys/tty.h sys/uio.h)
-AC_CHECK_HEADERS(sys/utsname.h sys/wait.h)
+AC_CHECK_HEADERS(sys/filio.h sys/ioctl_compat.h sys/label.h sys/param.h)
+AC_CHECK_HEADERS(sys/select.h sys/sockio.h sys/stream.h sys/time.h sys/tty.h)
+AC_CHECK_HEADERS(sys/uio.h sys/utsname.h sys/wait.h)
 dnl On some systems, term.h requires curses.h inclusion
 AC_CHECK_HEADERS(term.h,,,
 [#ifdef HAVE_CURSES_H
@@ -475,6 +480,16 @@ if test $krb5_cv_type_speed_t = no; then
              [Define if system termios interface doesn't define speed_t])
 fi
 
+dnl For dejagnu tests
+AC_CHECK_PROG(RUNTEST,runtest,runtest)
+if test x"$RUNTEST" != x; then
+    HAVE_RUNTEST=yes
+else
+    HAVE_RUNTEST=no
+fi
+AC_SUBST(HAVE_RUNTEST)
+
 V5_AC_OUTPUT_MAKEFILE(. bsd libpty
                       gssftp gssftp/ftp gssftp/ftpd
-                      telnet telnet/libtelnet telnet/telnet telnet/telnetd)
+                      telnet telnet/libtelnet telnet/telnet telnet/telnetd
+                      tests tests/resolve)
