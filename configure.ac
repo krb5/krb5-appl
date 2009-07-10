@@ -2,7 +2,7 @@ AC_INIT(Kerberos 5 applications)
 AC_CONFIG_SRCDIR(k5-platform.h)
 AC_CONFIG_HEADERS(autoconf.h)
 
-dnl Find the krb5 library installation.
+# Find the krb5 library installation.
 AC_ARG_WITH(krb5, [AS_HELP_STRING([--with-krb5=path],[where krb5 resides])])
 if test "$with_krb5" = no; then
     AC_MSG_ERROR([This package requires krb5])
@@ -72,7 +72,7 @@ AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h)
 AC_CHECK_HEADERS(sys/filio.h sys/ioctl_compat.h sys/label.h sys/param.h)
 AC_CHECK_HEADERS(sys/select.h sys/sockio.h sys/stream.h sys/time.h sys/tty.h)
 AC_CHECK_HEADERS(sys/uio.h sys/utsname.h sys/wait.h)
-dnl On some systems, term.h requires curses.h inclusion
+# On some systems, term.h requires curses.h inclusion
 AC_CHECK_HEADERS(term.h,,,
 [#ifdef HAVE_CURSES_H
 #include <curses.h>
@@ -104,22 +104,22 @@ AC_CHECK_FUNCS(setsid setutent setutsent setutxent strerror strlcpy strsave)
 AC_CHECK_FUNCS(tcgetpgrp tcsetpgrp ttyname unsetenv updwtmp updwtmpx utimes)
 AC_CHECK_FUNCS(utmpname utmpxname vhangup vasprintf vsnprintf waitpid)
 
-dnl Wishlist item: consolidate all of the replacement functions into a
-dnl new library (perhaps "libroken", according to tradition) and use
-dnl AC_REPLACE_FUNCS for all of them.  This would require moving
-dnl getenv out of setenv.c or just punting it.
+# Wishlist item: consolidate all of the replacement functions into a
+# new library (perhaps "libroken", according to tradition) and use
+# AC_REPLACE_FUNCS for all of them.  This would require moving getenv
+# out of setenv.c or just punting it.
 
-dnl bsd defines daemon if it is not provided.
+# bsd defines daemon if it is not provided.
 DAEMONOBJ=
 AC_CHECK_FUNCS(daemon,, DAEMONOBJ=daemon.o)
 AC_SUBST(DAEMONOBJ)
 
-dnl ftpd and bsd define getdtablesize if it is not provided.
+# ftpd and bsd define getdtablesize if it is not provided.
 GETDOBJ=
 AC_CHECK_FUNCS(getdtablesize,, GETDOBJ=getdtablesize.o)
 AC_SUBST(GETDOBJ)
 
-dnl libtelnet, ftpd, and bsd define setenv if it is not provided.
+# libtelnet, ftpd, and bsd define setenv if it is not provided.
 if test $ac_cv_func_setenv = no || test $ac_cv_func_unsetenv = no \
   || test $ac_cv_func_getenv = no; then
   SETENVOBJ=setenv.o
@@ -127,8 +127,8 @@ if test $ac_cv_func_setenv = no || test $ac_cv_func_unsetenv = no \
   AC_DEFINE([NEED_SETENV],1,[Define if setenv needs to be defined])
 fi
 
-dnl libtelnet defines these functions if not provided, using the
-dnl autoconf LIBOBJS mechanism.
+# libtelnet defines these functions if not provided, using the
+# autoconf LIBOBJS mechanism.
 AC_REPLACE_FUNCS(getopt herror parsetos setsid strcasecmp strdup strerror)
 AC_REPLACE_FUNCS(strftime)
 
@@ -147,7 +147,7 @@ KRB5_NEED_PROTO([#include <stdarg.h>
 #include <stdio.h>
 ],vasprintf)
 
-dnl Determine libraries for login and ftpd.
+# Determine libraries for login and ftpd.
 LOGINLIBS=
 FTPD_LIBS=
 AC_ARG_WITH([afs],
@@ -162,7 +162,7 @@ fi
 AC_CHECK_LIB(crypt,crypt,
              [LOGINLIBS="$LOGINLIBS -lcrypt"
               FTPD_LIBS="$FTPD_LIBS -lcrypt"])
-dnl AIX has all three of these; SCO might too.
+# AIX has all three of these; SCO might too.
 AC_CHECK_LIB(odm,main,
     AC_CHECK_LIB(s,main,
         AC_CHECK_LIB(cfg,main, 
@@ -172,7 +172,7 @@ AC_SUBST(KRSHDLIBS)
 AC_SUBST(LOGINLIBS)
 AC_SUBST(FTPD_LIBS)
 
-dnl Determine libraries for telnet and telnetd.
+# Determine libraries for telnet and telnetd.
 old_LIBS="$LIBS"
 AC_CHECK_LIB(termcap,main,
              [AC_DEFINE(TERMCAP,1,[Define if termcap library is available])
@@ -188,14 +188,14 @@ AC_CHECK_FUNC(tgetent, ,
               [AC_MSG_ERROR([Could not find tgetent; are you missing a curses/ncurses library?])])
 LIBS="$old_LIBS"
 
-dnl Make our operating system-specific security checks and definitions
-dnl for libpty, login, and ftpd.  The following code decides what
-dnl streams modules will be pushed onto a pty.  In particular, if
-dnl HAVE_STREAMS is defined and HAVE_LINE_PUSH is not defined, modules
-dnl may be pushed by inserting an appropriate generic ifdef for each
-dnl module in init_slave.c and AC_DEFINES for the operating systems
-dnl that need the modules.  Each OS that supports streams has a
-dnl different idea of what you want to push.
+# Make our operating system-specific security checks and definitions
+# for libpty, login, and ftpd.  The following code decides what
+# streams modules will be pushed onto a pty.  In particular, if
+# HAVE_STREAMS is defined and HAVE_LINE_PUSH is not defined, modules
+# may be pushed by inserting an appropriate generic ifdef for each
+# module in init_slave.c and AC_DEFINES for the operating systems that
+# need the modules.  Each OS that supports streams has a different
+# idea of what you want to push.
 case $krb5_cv_host in
 *-*-ultrix*)
     echo "Disabling initial vhangup and setsid because they break under Ultrix"
@@ -239,12 +239,12 @@ if test $krb5_cv_has_streams = yes; then
 AC_DEFINE(HAVE_STREAMS,1,[Define if have streams])
 fi
 
-dnl telnet checks for STREAMSPTY to indicate streams and grantpt.
+# telnet checks for STREAMSPTY to indicate streams and grantpt.
 if test "$krb5_cv_has_stream" = yes -a "$ac_cv_func_grantpt" = yes; then
     AC_DEFINE(STREAMSPTY,1,[Define if streams pty interface should be used])
 fi
 
-dnl ----- utmp stuff -----
+# ----- utmp stuff -----
 
 AC_DEFUN(K5_CHECK_UT_MEMBER,
 [AC_MSG_CHECKING([for $2 in struct $1])
@@ -383,7 +383,7 @@ KRB5_NEED_PROTO([#include <sys/types.h>
 #endif
 ],logwtmp)
 
-dnl ----- End of utmp stuff -----
+# ----- End of utmp stuff -----
 
 AC_MSG_CHECKING([arguments to getpgrp])
 AC_CACHE_VAL(krb5_cv_getpgrp_args,
@@ -434,7 +434,7 @@ AC_DEFINE(HAVE_SHADOW,1,[Define if shadow password interface is available])
 fi
 K5_AC_CHECK_FILES(/etc/environment /etc/TIMEZONE)
 
-dnl bsd and libpty check POSIX_TERMIOS; telnet checks USE_TERMIO.
+# bsd and libpty check POSIX_TERMIOS; telnet checks USE_TERMIO.
 AC_CHECK_HEADER(termios.h,
     [AC_CHECK_FUNC(cfsetispeed,
         [AC_DEFINE(POSIX_TERMIOS,1,[Define for POSIX termios interface])
@@ -480,7 +480,7 @@ if test $krb5_cv_type_speed_t = no; then
              [Define if system termios interface doesn't define speed_t])
 fi
 
-dnl For dejagnu tests
+# For dejagnu tests
 AC_CHECK_PROG(RUNTEST,runtest,runtest)
 if test x"$RUNTEST" != x; then
     HAVE_RUNTEST=yes
