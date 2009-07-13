@@ -240,7 +240,7 @@ AC_DEFINE(HAVE_STREAMS,1,[Define if have streams])
 fi
 
 # telnet checks for STREAMSPTY to indicate streams and grantpt.
-if test "$krb5_cv_has_stream" = yes -a "$ac_cv_func_grantpt" = yes; then
+if test "$krb5_cv_has_streams" = yes -a "$ac_cv_func_grantpt" = yes; then
     AC_DEFINE(STREAMSPTY,1,[Define if streams pty interface should be used])
 fi
 
