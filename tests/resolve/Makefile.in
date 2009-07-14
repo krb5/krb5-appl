@@ -9,8 +9,9 @@ SRCS=$(srcdir)/resolve.c $(srcdir)/addrinfo-test.c \
 
 all:: resolve addrinfo-test fake-addrinfo-test
 
+# KRB5_BASE_LIBS is a cheap way of getting network libraries here.
 resolve: resolve.o
-	$(CC_LINK) -o $@ resolve.o $(LIBS)
+	$(CC_LINK) -o $@ resolve.o $(KRB5_BASE_LIBS) $(LIBS)
 
 addrinfo-test: addrinfo-test.o
 	$(CC_LINK) -o $@ addrinfo-test.o $(KRB5_BASE_LIBS) $(LIBS)
