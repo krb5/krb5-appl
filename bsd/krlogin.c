@@ -335,12 +335,6 @@ struct winsize *wp;
 /* Globals for terminal modes and flow control */
 struct  termios defmodes;
 struct  termios ixon_state;
-#else
-#ifdef USE_TERMIO
-/* Globals for terminal modes and flow control */
-struct  termio defmodes;
-struct  termio ixon_state;
-#endif
 #endif
 
 
@@ -353,11 +347,7 @@ main(argc, argv)
 #ifdef POSIX_TERMIOS
     struct termios ttyb;
 #else
-#ifdef USE_TERMIO
-    struct termio ttyb;
-#else
     struct sgttyb ttyb;
-#endif
 #endif
     struct passwd *pwd;
     struct servent *sp;
@@ -596,13 +586,6 @@ main(argc, argv)
 #ifdef POSIX_TERMIOS
     tcgetattr(0, &defmodes);
     tcgetattr(0, &ixon_state);
-#else
-#ifdef USE_TERMIO
-    /**** moved before rcmd call so that if get a SIGPIPE in rcmd **/
-    /**** we will have the defmodes set already. ***/
-    (void)ioctl(fileno(stdin), TIOCGETP, &defmodes);
-    (void)ioctl(fileno(stdin), TIOCGETP, &ixon_state);
-#endif
 #endif
 
     /* Catch SIGPIPE, as that means we lost the connection */
@@ -744,23 +727,6 @@ int	defflags, tabflag;
 int	deflflags;
 char	deferase, defkill;
 
-#ifdef USE_TERMIO
-char defvtim, defvmin;
-#if defined(hpux) || defined(__hpux)
-#include <sys/bsdtty.h>
-#include <sys/ptyio.h>
-#endif
-struct tchars {
-    char    t_intrc;        /* interrupt */
-    char    t_quitc;        /* quit */
-    char    t_startc;       /* start output */
-    char    t_stopc;        /* stop output */
-    char    t_eofc;         /* end-of-file */
-    char    t_brkc;         /* input delimiter (like nl) */
-};
-#endif
-
-
 #ifndef POSIX_TERMIOS
 #ifdef TIOCGLTC
 /*
@@ -797,36 +763,16 @@ static void doit(oldmask)
     deftty.c_cc[VLNEXT] = 0;
 #endif
 #else
-#ifdef USE_TERMIO
-    struct termio sb;
-#else
     struct sgttyb sb;
-#endif
     
     (void) ioctl(0, TIOCGETP, (char *)&sb);
     defflags = sb.sg_flags;
-#ifdef USE_TERMIO
-    tabflag = sb.c_oflag & TABDLY;
-    defflags |= ECHO;
-    deferase = sb.c_cc[VERASE];
-    defkill = sb.c_cc[VKILL];
-    sb.c_cc[VMIN] = 1;
-    sb.c_cc[VTIME] = 1;
-    defvtim = sb.c_cc[VTIME];
-    defvmin = sb.c_cc[VMIN];
-    deftc.t_quitc = CQUIT;
-    deftc.t_startc = CSTART;
-    deftc.t_stopc = CSTOP ;
-    deftc.t_eofc = CEOF;
-    deftc.t_brkc =  '\n';
-#else
     tabflag = defflags & TBDELAY;
     defflags &= ECHO | CRMOD;
     deferase = sb.sg_erase;
     defkill = sb.sg_kill;
     (void) ioctl(0, TIOCLGET, (char *)&deflflags);
     (void) ioctl(0, TIOCGETC, (char *)&deftc);
-#endif
 
     notc.t_startc = deftc.t_startc;
     notc.t_stopc = deftc.t_stopc;
@@ -1349,11 +1295,7 @@ int server_message(mark)
 #ifdef POSIX_TERMIOS
     struct termios tty;
 #else
-#ifdef USE_TERMIO
-    struct termio sb;
-#else
     struct sgttyb sb;
-#endif
 #endif
 
     if (mark & TIOCPKT_WINDOW) {
@@ -1376,30 +1318,20 @@ int server_message(mark)
 #else
     if (!eight && (mark & TIOCPKT_NOSTOP)) {
 	(void) ioctl(0, TIOCGETP, (char *)&sb);
-#ifdef USE_TERMIO
-	sb.c_iflag |= IXOFF;
-	sb.sg_flags &= ~ICANON;
-#else
 	sb.sg_flags &= ~CBREAK;
 	sb.sg_flags |= RAW;
 	notc.t_stopc = -1;
 	notc.t_startc = -1;
 	(void) ioctl(0, TIOCSETC, (char *)&notc);
-#endif
 	(void) ioctl(0, TIOCSETN, (char *)&sb);
     }
     if (!eight && (mark & TIOCPKT_DOSTOP)) {
 	(void) ioctl(0, TIOCGETP, (char *)&sb);
-#ifdef USE_TERMIO
-	sb.sg_flags  |= ICANON;
-	sb.c_iflag |= IXON;
-#else
 	sb.sg_flags &= ~RAW;
 	sb.sg_flags |= CBREAK;
 	notc.t_stopc = deftc.t_stopc;
 	notc.t_startc = deftc.t_startc;
 	(void) ioctl(0, TIOCSETC, (char *)&notc);
-#endif
 	(void) ioctl(0, TIOCSETN, (char *)&sb);
     }
 #endif
@@ -1642,71 +1574,25 @@ int f;
     }
 #else
     struct ltchars *ltc;
-#ifdef USE_TERMIO
-    struct termio sb;
-#else
     struct tchars *tc;
     struct sgttyb sb;
     int	lflags;
     (void) ioctl(0, TIOCLGET, (char *)&lflags);
-#endif
     
     (void) ioctl(0, TIOCGETP, (char *)&sb);
     switch (f) {
 	
     case 0:
-#ifdef USE_TERMIO
-	/*
-	**      remember whether IXON was set, so it can be restored
-	**      when mode(1) is next done
-	*/
-	(void) ioctl(fileno(stdin), TIOCGETP, &ixon_state);
-	/*
-	**      copy the initial modes we saved into sb; this is
-	**      for restoring to the initial state
-	*/
-	sb = defmodes;
-#else
 	sb.sg_flags &= ~(CBREAK|RAW|TBDELAY);
 	sb.sg_flags |= defflags|tabflag;
 	sb.sg_kill = defkill;
 	sb.sg_erase = deferase;
 	lflags = deflflags;
 	tc = &deftc;
-#endif
 	ltc = &defltc;
 	break;
 	
     case 1:
-#ifdef USE_TERMIO
-	/*
-	**      turn off output mappings
-	*/
-	sb.c_oflag &= ~(ONLCR|OCRNL);
-	/*
-	**      turn off canonical processing and character echo;
-	**      also turn off signal checking -- ICANON might be
-	**      enough to do this, but we're being careful
-	*/
-	sb.c_lflag &= ~(ECHO|ICANON|ISIG);
-	sb.c_cc[VTIME] = 1;
-	sb.c_cc[VMIN] = 1;
-	if (eight)
-	    sb.c_iflag &= ~(ISTRIP);
-#ifdef TABDLY
-	/* preserve tab delays, but turn off tab-to-space expansion */
-	if ((sb.c_oflag & TABDLY) == TAB3)
-	    sb.c_oflag &= ~TAB3;
-#endif
-	/*
-	**  restore current flow control state
-	*/
-	if ((ixon_state.c_iflag & IXON) && flow ) {
-	    sb.c_iflag |= IXON;
-	} else {
-	    sb.c_iflag &= ~IXON;
-	}
-#else /* ! USE_TERMIO */
 	sb.sg_flags &= ~(CBREAK|RAW);
 	sb.sg_flags |= (!flow ? RAW : CBREAK);
 	/* preserve tab delays, but turn off XTABS */
@@ -1723,7 +1609,6 @@ int f;
 #endif /* LPASS8 */
 	tc = &notc;
 	sb.sg_flags &= ~defflags;
-#endif /* USE_TERMIO */
 	
 	ltc = &noltc;
 	break;
@@ -1732,10 +1617,8 @@ int f;
 	return;
     }
     (void) ioctl(0, TIOCSLTC, (char *)ltc);
-#ifndef USE_TERMIO
     (void) ioctl(0, TIOCSETC, (char *)tc);
     (void) ioctl(0, TIOCLSET, (char *)&lflags);
-#endif
     (void) ioctl(0, TIOCSETN, (char *)&sb);
 #endif /* !POSIX_TERMIOS */
 }
