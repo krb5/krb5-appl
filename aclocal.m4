@@ -457,12 +457,6 @@ fi
 AC_CHECK_FUNCS(setutent setutxent updwtmp updwtmpx)
 ])dnl
 dnl
-dnl
-AC_DEFUN(KRB5_AC_NEED_DAEMON, [
-KRB5_NEED_PROTO([#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif],daemon,1)])dnl
-dnl
 dnl Check if stdarg or varargs is available *and compiles*; prefer stdarg.
 dnl (This was sent to djm for incorporation into autoconf 3/12/1996.  KR)
 dnl
@@ -504,32 +498,6 @@ fi
 
 fi dnl stdarg test failure
 
-])dnl
-dnl
-dnl Check if we need the prototype for a function - we give it a bogus 
-dnl prototype and if it complains - then a valid prototype exists on the 
-dnl system.
-dnl
-dnl KRB5_NEED_PROTO(includes, function, [bypass])
-dnl if $3 set, don't see if library defined. 
-dnl Useful for case where we will define in libkrb5 the function if need be
-dnl but want to know if a prototype exists in either case on system.
-dnl
-AC_DEFUN([KRB5_NEED_PROTO], [
-ifelse([$3], ,[if test "x$ac_cv_func_$2" = xyes; then])
-AC_CACHE_CHECK([if $2 needs a prototype provided], krb5_cv_func_$2_noproto,
-AC_TRY_COMPILE([$1],
-[#undef $2
-struct k5foo {int foo; } xx;
-extern int $2 (struct k5foo*);
-$2(&xx);
-],
-krb5_cv_func_$2_noproto=yes,krb5_cv_func_$2_noproto=no))
-if test $krb5_cv_func_$2_noproto = yes; then
-	AC_DEFINE([NEED_]translit($2, [a-z], [A-Z])[_PROTO], 1, dnl
-[define if the system header files are missing prototype for $2()])
-fi
-ifelse([$3], ,[fi])
 ])dnl
 dnl
 dnl =============================================================

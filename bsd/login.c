@@ -234,10 +234,6 @@ typedef sigtype (*handler)();
 
 #define MAXENVIRON	32
 
-#ifdef NEED_SETENV
-extern int setenv(char *, char *, int);
-#endif
-
 /*
  * This bounds the time given to login.  Not a define so it can
  * be patched on machines where it's too small.

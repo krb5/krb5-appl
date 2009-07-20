@@ -1,6 +1,6 @@
-/*
- * Copyright (c) 1988, 1993
- *	The Regents of the University of California.  All rights reserved.
+/*-
+ * Copyright (c) 1990 The Regents of the University of California.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,19 +31,66 @@
  * SUCH DAMAGE.
  */
 
-/* based on @(#)strrchr.c	8.1 (Berkeley) 6/4/93 */
-
 #include <autoconf.h>
 
-#ifdef	HAVE_STRING_H
-#include <string.h>
-#else
-#include <strings.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/file.h>
+#include <unistd.h>
+#ifdef HAVE_PATHS_H
+#include <paths.h>
 #endif
 
-char *
-strrchr(p, ch)
-	char *p, ch;
+#ifndef _PATH_DEVNULL
+#define _PATH_DEVNULL "/dev/null"
+#endif
+
+int
+daemon(nochdir, noclose)
+	int nochdir, noclose;
 {
-	return(rindex(p, ch));
+	int cpid;
+
+	if ((cpid = fork()) == -1)
+		return (-1);
+	if (cpid)
+		exit(0);
+#ifdef HAVE_SETSID
+	(void) setsid();
+#else
+#ifndef TIOCNOTTY
+	setpgrp();
+#else
+	{
+		int n;
+	    
+		/*
+		 * The open below may hang on pseudo ttys if the person
+		 * who starts named logs out before this point.  Thus,
+		 * the need for the timer.
+		 */
+		alarm(120);
+		n = open("/dev/tty", O_RDWR);
+		alarm(0);
+		if (n > 0) {
+			(void) ioctl(n, TIOCNOTTY, (char *)NULL);
+			(void) close(n);
+		}
+	}
+#endif
+#endif
+	if (!nochdir)
+		(void) chdir("/");
+	if (!noclose) {
+		int devnull = open(_PATH_DEVNULL, O_RDWR, 0);
+
+		if (devnull != -1) {
+			(void) dup2(devnull, 0);
+			(void) dup2(devnull, 1);
+			(void) dup2(devnull, 2);
+			if (devnull > 2)
+				(void) close(devnull);
+		}
+	}
+	return (0);
 }

@@ -1,0 +1,31 @@
+mydir=libmissing
+BUILDTOP=$(REL)..
+
+LIBOBJS=@LIBOBJS@
+
+OBJS= dummy.o $(LIBOBJS)
+
+SRCS=	$(srcdir)/dummy.c \
+	$(srcdir)/asprintf.c \
+	$(srcdir)/daemon.c \
+	$(srcdir)/getdtablesize.c \
+	$(srcdir)/getopt.c \
+	$(srcdir)/herror.c \
+	$(srcdir)/parsetos.c \
+	$(srcdir)/setenv.c \
+	$(srcdir)/setsid.c \
+	$(srcdir)/strcasecmp.c \
+	$(srcdir)/strdup.c \
+	$(srcdir)/strerror.c \
+	$(srcdir)/strftime.c \
+	$(srcdir)/strlcpy.c
+
+all:: libmissing.a
+
+clean::
+	$(RM) libmissing.a
+
+libmissing.a: $(OBJS)
+	$(RM) $@
+	$(AR) cq $@ $(OBJS)
+	$(RANLIB) $@

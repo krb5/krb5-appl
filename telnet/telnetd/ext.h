@@ -233,10 +233,3 @@ extern struct {
 #if	defined(CRAY2) && defined(UNICOS5)
 extern int	needtermstat;
 #endif
-
-#ifdef NEED_UNSETENV_PROTO
-extern void unsetenv(const char *);
-#endif
-#ifdef NEED_SETENV_PROTO
-extern void setenv(const char *, const char *, int);
-#endif

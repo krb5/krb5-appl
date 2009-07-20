@@ -22,8 +22,8 @@ LOCALINCLUDES = -I$(srcdir)/..
 all::	ftp
 all-windows::	$(OUTPRE)ftp.exe
 
-ftp:	$(OBJS)
-	$(CC_LINK) -o ftp $(OBJS) $(GSS_LIBS) $(LIBS)
+ftp:	$(OBJS) $(MISSING_DEPLIB)
+	$(CC_LINK) -o ftp $(OBJS) $(MISSING_LIB) $(GSS_LIBS) $(LIBS)
 
 $(OUTPRE)ftp.exe: $(OBJS) $(GLIB) $(KLIB)
 	link $(EXE_LINKOPTS) -out:$@ $** ws2_32.lib advapi32.lib $(SCLIB)

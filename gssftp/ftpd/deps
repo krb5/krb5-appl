@@ -17,5 +17,3 @@ $(OUTPRE)radix.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../ftp/ftp_var.h \
   $(srcdir)/../ftp/radix.c
 $(OUTPRE)secure.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../arpa/ftp.h \
   $(srcdir)/../ftp/secure.c $(srcdir)/../ftp/secure.h
-$(OUTPRE)getdtablesize.$(OBJEXT): $(SRCTOP)/bsd/getdtablesize.c
-$(OUTPRE)setenv.$(OBJEXT): $(SRCTOP)/bsd/setenv.c

@@ -17,8 +17,8 @@ dump-utmp: dump-utmp.o
 	$(CC_LINK) -o dump-utmp dump-utmp.o
 dump-utmp.o: dump-utmp.c
 
-pty_paranoia: pty_paranoia.o $(COM_ERR_DEPLIB) $(PTY_DEPLIB)
-	$(CC_LINK) -o pty_paranoia pty_paranoia.o $(PTY_LIB) $(LIBS)
+pty_paranoia: pty_paranoia.o $(COM_ERR_DEPLIB) $(PTY_DEPLIB) $(MISSING_LIB)
+	$(CC_LINK) -o pty_paranoia pty_paranoia.o $(PTY_LIB) $(MISSING_LIB) $(LIBS)
 
 check-paranoia: pty_paranoia
 	$(VALGRIND) ./pty_paranoia

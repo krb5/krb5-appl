@@ -197,6 +197,8 @@ KRB5_BASE_LIBS = @KRB5_BASE_LIBS@
 GSS_LIBS = @GSS_LIBS@
 PTY_DEPLIB = $(BUILDTOP)/libpty/libpty.a
 PTY_LIB = -L$(BUILDTOP)/libpty -lpty
+MISSING_DEPLIB = $(BUILDTOP)/libmissing/libmissing.a
+MISSING_LIB = -L$(BUILDTOP)/libmissing -lmissing
 
 # libutil for NetBSD, et al. for openpty(), etc.
 UTIL_LIB	= @UTIL_LIB@

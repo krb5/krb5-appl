@@ -31,19 +31,40 @@
  * SUCH DAMAGE.
  */
 
-/* based on @(#)strchr.c	8.1 (Berkeley) 6/4/93 */
+/* based on @(#)herror.c	8.1 (Berkeley) 6/4/93 */
 
 #include <autoconf.h>
 
-#ifdef	HAVE_STRING_H
-#include <string.h>
-#else
-#include <strings.h>
-#endif
+#include <stdio.h>
 
-char *
-strchr(p, ch)
-	char *p, ch;
+char	*h_errlist[] = {
+	"Error 0",
+	"Unknown host",				/* 1 HOST_NOT_FOUND */
+	"Host name lookup failure",		/* 2 TRY_AGAIN */
+	"Unknown server error",			/* 3 NO_RECOVERY */
+	"No address associated with name",	/* 4 NO_ADDRESS */
+};
+int	h_nerr = { sizeof(h_errlist)/sizeof(h_errlist[0]) };
+
+int h_errno;		/* In some version of SunOS this is necessary */
+
+/*
+ * herror --
+ *	print the error indicated by the h_errno value.
+ */
+herror(s)
+	const char *s;
 {
-	return(index(p, ch));
+	if (s && *s) {
+		fprintf(stderr, "%s: ", s);
+	}
+	if ((h_errno < 0) || (h_errno >= h_nerr)) {
+		fprintf(stderr, "Unknown error\n");
+	} else if (h_errno == 0) {
+#if	defined(sun)
+		fprintf(stderr, "Host unknown\n");
+#endif	/* defined(sun) */
+	} else {
+		fprintf(stderr, "%s\n", h_errlist[h_errno]);
+	}
 }

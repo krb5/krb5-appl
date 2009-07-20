@@ -45,45 +45,73 @@
 #include <fcntl.h>
 #include <errno.h>
 
-/* Provide strlcpy/strlcat interfaces. */
+/* Prototypes for system functions possibly defined in libmissing. */
+
+#ifndef HAVE_DAEMON
+int daemon(int nochdir, int noclose);
+#endif
+
+#ifndef HAVE_GETDTABLESIZE
+int getdtablesize(void);
+#endif
+
+#ifndef HAVE_GETOPT
+int getopt(int nargc, char *const *nargv, const char *ostr);
+#endif
+
+#ifndef HAVE_HERROR
+void herror(const char *s);
+#endif
+
+#ifndef HAVE_PARSETOS
+int parsetos(char *name, char *proto);
+#endif
+
+#ifndef HAVE_SETENV
+int setenv(char *name, char *value, int rewrite);
+void unsetenv(char *name);
+#endif
+
+#ifndef HAVE_SETSID
+int setsid(void);
+#endif
+
+#ifndef HAVE_STRCASECMP
+int strcasecmp(const char *s1, const char *s2);
+int strncasecmp(const char *s1, const char *s2, size_t n);
+#endif
+
+#ifndef HAVE_STRDUP
+char *strdup(const char *str);
+#endif
+
+#ifndef HAVE_STRERROR
+char *strerror(int num);
+#endif
+
+#ifndef HAVE_STRFTIME
+size_t strftime(char *s, size_t maxsize, const char *format,
+		const struct tm *t);
+#endif
+
 #ifndef HAVE_STRLCPY
-#define strlcpy krb5int_strlcpy
-#define strlcat krb5int_strlcat
-extern size_t krb5int_strlcpy(char *dst, const char *src, size_t siz);
-extern size_t krb5int_strlcat(char *dst, const char *src, size_t siz);
+size_t strlcpy(char *dst, const char *src, size_t siz);
+size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 
 #ifndef HAVE_VASPRINTF
-
-extern int krb5int_vasprintf(char **, const char *, va_list)
+int vasprintf(char **, const char *, va_list)
 #if !defined(__cplusplus) && (__GNUC__ > 2)
     __attribute__((__format__(__printf__, 2, 0)))
 #endif
     ;
-extern int krb5int_asprintf(char **, const char *, ...)
+int asprintf(char **, const char *, ...)
 #if !defined(__cplusplus) && (__GNUC__ > 2)
     __attribute__((__format__(__printf__, 2, 3)))
 #endif
     ;
 
-#define vasprintf krb5int_vasprintf
-/* Assume HAVE_ASPRINTF iff HAVE_VASPRINTF.  */
-#define asprintf krb5int_asprintf
-
-#elif defined(NEED_VASPRINTF_PROTO)
-
-extern int vasprintf(char **, const char *, va_list)
-#if !defined(__cplusplus) && (__GNUC__ > 2)
-    __attribute__((__format__(__printf__, 2, 0)))
-#endif
-    ;
-extern int asprintf(char **, const char *, ...)
-#if !defined(__cplusplus) && (__GNUC__ > 2)
-    __attribute__((__format__(__printf__, 2, 3)))
-#endif
-    ;
-
-#endif /* have vasprintf and prototype? */
+#endif /* NEED_VASPRINTF_PROTO */
 
 /* Return true if the snprintf return value RESULT reflects a buffer
    overflow for the buffer size SIZE.

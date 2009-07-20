@@ -138,10 +138,6 @@ static    int
 send_tncmd (void (*func)(), char *, char *);
 static int help(int, char **);
 
-#ifdef NEED_HERROR_PROTO
-extern void herror(const char *);
-#endif
-
 typedef struct {
 	char	*name;		/* command name */
 	char	*help;		/* help string (NULL for no help) */

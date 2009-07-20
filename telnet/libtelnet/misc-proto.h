@@ -73,16 +73,4 @@ int telnet_spin (void);
 char *telnet_getenv (char *);
 char *telnet_gets (char *, char *, int, int);
 
-
-#ifdef NEED_PARSETOS
-int parsetos(char *, char *);
-#endif
-
-#ifdef NEED_SETENV
-int setenv(const char *, const char *, int);
-#ifndef HAVE_UNSETENV
-void unsetenv(const char *);
-#endif
-#endif
-
 #endif

@@ -28,15 +28,6 @@ typedef sigtype (*sig_t)();
 static	int *popen_pid;
 static	int nfiles;
 
-#ifndef HAVE_GETDTABLESIZE
-#include <sys/resource.h>
-int getdtablesize() {
-  struct rlimit rl;
-  getrlimit(RLIMIT_NOFILE, &rl);
-  return rl.rlim_cur;
-}
-#endif
-
 FILE *
 mypopen(cmd,mode)
 	char *cmd;

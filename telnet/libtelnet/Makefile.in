@@ -27,8 +27,6 @@ LOCALINCLUDES=-I.. -I$(srcdir)/..
 DEFINES = -DTELNET_BUFSIZE=65535 $(AUTH_DEF)
 LIBOBJS=@LIBOBJS@
 
-SETENVOBJ=@SETENVOBJ@
-
 LIBBASE=telnet
 LIBMAJOR=0
 LIBMINOR=0
@@ -42,19 +40,10 @@ SRCS=   $(srcdir)/auth.c \
 	$(srcdir)/kerberos5.c \
 	$(srcdir)/forward.c \
 	$(srcdir)/enc_des.c \
-	$(srcdir)/setenv.c \
-	$(srcdir)/getent.c \
-	$(srcdir)/parsetos.c \
-	$(srcdir)/strdup.c \
-	$(srcdir)/strcasecmp.c \
-	$(srcdir)/strchr.c \
-	$(srcdir)/strrchr.c \
-	$(srcdir)/strftime.c \
-	$(srcdir)/strerror.c
+	$(srcdir)/getent.c
 
-OBJS=   auth.o encrypt.o genget.o \
-	misc.o kerberos5.o forward.o enc_des.o \
-	$(LIBOBJS) getent.o $(SETENVOBJ)
+OBJS=   auth.o encrypt.o genget.o misc.o \
+	kerberos5.o forward.o enc_des.o getent.o
 
 TELNET_H= $(srcdir)/../arpa/telnet.h
 

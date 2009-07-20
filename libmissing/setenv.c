@@ -22,11 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef NEED_SETENV
-extern int setenv(char *, char *, int);
-extern void unsetenv(char *);
-#endif
-
 static char *_findenv(char *, int*);
 /*
  * setenv --

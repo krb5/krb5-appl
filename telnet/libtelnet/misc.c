@@ -71,8 +71,6 @@ auth_encrypt_init(local, remote, name, server)
 auth_encrypt_user(name)
 	const char *name;
 {
-	extern char *strdup();
-
 	if (UserNameRequested)
 		free(UserNameRequested);
 	UserNameRequested = name ? strdup(name) : 0;

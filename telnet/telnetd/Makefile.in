@@ -42,8 +42,7 @@ SRCS=	$(srcdir)/telnetd.c \
 	$(srcdir)/sys_term.c \
 	$(srcdir)/utility.c \
 	$(srcdir)/global.c \
-	$(srcdir)/authenc.c \
-	$(GETTYSRC)
+	$(srcdir)/authenc.c
 OBJS=	telnetd.o \
 	termio-tn.o \
 	termios-tn.o \
@@ -53,13 +52,12 @@ OBJS=	telnetd.o \
 	sys_term.o \
 	utility.o \
 	global.o \
-	authenc.o \
-	$(GETTYOBJ)
+	authenc.o
 
 all:: telnetd
 
-telnetd: $(OBJS) $(PTY_DEPLIB) ../libtelnet/libtelnet.a
-	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(PTY_LIB) $(UTIL_LIB) $(KRB5_BASE_LIBS) $(LIBS)
+telnetd: $(OBJS) $(PTY_DEPLIB) ../libtelnet/libtelnet.a $(MISSING_DEPLIB)
+	$(CC_LINK) -o $@ $(OBJS) ../libtelnet/libtelnet.a $(PTY_LIB) $(UTIL_LIB) $(MISSING_LIB) $(KRB5_BASE_LIBS) $(LIBS)
 
 clean::
 	$(RM) telnetd

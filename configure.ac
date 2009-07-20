@@ -19,8 +19,8 @@ if test -z "$krb5_config" || test -z "`$krb5_config --prefix`"; then
   AC_MSG_ERROR([Specify -with-krb5= krb5 exec-prefix or path to krb5-config])
 fi
 KRB5_CFLAGS=`$krb5_config --cflags`
-KRB5_BASE_LIBS=`$krb5_config --libs krb5`" -lkrb5support"
-GSS_LIBS=`$krb5_config --libs gssapi`" -lkrb5support"
+KRB5_BASE_LIBS=`$krb5_config --libs krb5`
+GSS_LIBS=`$krb5_config --libs gssapi`
 KRB5_BINDIR=`$krb5_config --exec-prefix`/bin
 KRB5_SBINDIR=`$krb5_config --exec-prefix`/sbin
 AC_SUBST(KRB5_CFLAGS)
@@ -60,7 +60,6 @@ CHECK_UTMP
 CHECK_WAIT_TYPE
 DECLARE_SYS_ERRLIST
 KRB5_AC_MAINTAINER_MODE
-KRB5_AC_NEED_DAEMON
 KRB5_AC_INET6
 KRB5_AC_LIBUTIL
 KRB5_SIGTYPE
@@ -99,53 +98,14 @@ AC_CHECK_HEADER(sys/ptyvar.h, [], [],
 AC_CHECK_FUNCS(_getpty cgetent getcwd getenv gettosbyname getusershell getutmp)
 AC_CHECK_FUNCS(getutmpx grantpt inet_aton initgroups isatty killpg killpg)
 AC_CHECK_FUNCS(line_push logwtmp openpty ptsname revoke rmufile rresvport_af)
-AC_CHECK_FUNCS(setenv seteuid setlogin setpgid setpriority setresuid setreuid)
-AC_CHECK_FUNCS(setsid setutent setutsent setutxent strerror strlcpy strsave)
-AC_CHECK_FUNCS(tcgetpgrp tcsetpgrp ttyname unsetenv updwtmp updwtmpx utimes)
-AC_CHECK_FUNCS(utmpname utmpxname vhangup vasprintf vsnprintf waitpid)
+AC_CHECK_FUNCS(seteuid setlogin setpgid setpriority setresuid setreuid)
+AC_CHECK_FUNCS(setutent setutsent setutxent strsave tcgetpgrp tcsetpgrp)
+AC_CHECK_FUNCS(ttyname unsetenv updwtmp updwtmpx utimes utmpname utmpxname)
+AC_CHECK_FUNCS(vhangup vsnprintf waitpid)
 
-# Wishlist item: consolidate all of the replacement functions into a
-# new library (perhaps "libroken", according to tradition) and use
-# AC_REPLACE_FUNCS for all of them.  This would require moving getenv
-# out of setenv.c or just punting it.
-
-# bsd defines daemon if it is not provided.
-DAEMONOBJ=
-AC_CHECK_FUNCS(daemon,, DAEMONOBJ=daemon.o)
-AC_SUBST(DAEMONOBJ)
-
-# ftpd and bsd define getdtablesize if it is not provided.
-GETDOBJ=
-AC_CHECK_FUNCS(getdtablesize,, GETDOBJ=getdtablesize.o)
-AC_SUBST(GETDOBJ)
-
-# libtelnet, ftpd, and bsd define setenv if it is not provided.
-if test $ac_cv_func_setenv = no || test $ac_cv_func_unsetenv = no \
-  || test $ac_cv_func_getenv = no; then
-  SETENVOBJ=setenv.o
-  AC_SUBST([SETENVOBJ])
-  AC_DEFINE([NEED_SETENV],1,[Define if setenv needs to be defined])
-fi
-
-# libtelnet defines these functions if not provided, using the
-# autoconf LIBOBJS mechanism.
-AC_REPLACE_FUNCS(getopt herror parsetos setsid strcasecmp strdup strerror)
-AC_REPLACE_FUNCS(strftime)
-
-KRB5_NEED_PROTO([#include <stdlib.h>],setenv,1)
-KRB5_NEED_PROTO([#include <stdlib.h>],unsetenv,1)
-KRB5_NEED_PROTO([#include <unistd.h>
-#include <stdlib.h>],parsetos,1)
-dnl
-KRB5_NEED_PROTO([#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>],herror,1)
-KRB5_NEED_PROTO([#include <unistd.h>
-],revoke)
-KRB5_NEED_PROTO([#include <stdarg.h>
-#include <stdio.h>
-],vasprintf)
+# Determine which functions to define in libmissing.
+AC_REPLACE_FUNCS(daemon getdtablesize getopt herror parsetos setenv setsid)
+AC_REPLACE_FUNCS(strcasecmp strdup strerror strftime strlcpy vasprintf)
 
 # Determine libraries for login and ftpd.
 LOGINLIBS=
@@ -356,33 +316,6 @@ if test "$ac_cv_func_setutent" = yes && \
   fi
 fi
 
-KRB5_NEED_PROTO([#ifdef HAVE_UTMP_H
-#include <utmp.h>
-#endif
-#ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>
-#endif
-],getutmp)
-dnl
-
-KRB5_NEED_PROTO([#include <sys/types.h>
-#ifdef HAVE_UTMP_H
-#include <utmp.h>
-#endif
-#ifdef HAVE_LIBUTIL_H
-#include <libutil.h>
-#endif
-#ifdef HAVE_UTIL_H
-#include <util.h>
-#endif
-],logwtmp)
-
 # ----- End of utmp stuff -----
 
 AC_MSG_CHECKING([arguments to getpgrp])
@@ -489,7 +422,7 @@ else
 fi
 AC_SUBST(HAVE_RUNTEST)
 
-V5_AC_OUTPUT_MAKEFILE(. bsd libpty
+V5_AC_OUTPUT_MAKEFILE(. bsd libmissing libpty
                       gssftp gssftp/ftp gssftp/ftpd
                       telnet telnet/libtelnet telnet/telnet telnet/telnetd
                       tests tests/resolve)
