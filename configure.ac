@@ -50,6 +50,10 @@ AC_CHECK_TYPES([socklen_t, struct sockaddr_storage],,,
 #include <sys/socket.h>
 ])
 
+# Enables system protoypes for extended functions (such as asprintf)
+# on most Linux systems.
+AC_DEFINE(_GNU_SOURCE, 1, [Enable extended glibc prototypes])
+
 AC_HEADER_STDARG
 AC_HEADER_TIME
 CHECK_DIRENT
