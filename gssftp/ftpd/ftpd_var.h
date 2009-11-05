@@ -39,11 +39,11 @@
 
 /* radix.c */
 char *radix_error (int);
-int radix_encode (unsigned char *, unsigned char *, int *, int);
+int radix_encode (unsigned char *, unsigned char *, size_t *, int);
 
 /* ftpd.c */
 void ack(char *);
-int auth_data(char *);
+int auth_data(unsigned char *);
 void auth(char *);
 void cwd(char *);
 void delete_file(char *);

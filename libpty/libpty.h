@@ -21,6 +21,7 @@
  */
 
 #ifndef __LIBPTY_H__
+#include <stddef.h>
 
 /* Constants for pty_update_utmp */
 #define PTY_LOGIN_PROCESS 0
@@ -47,7 +48,7 @@
 #define PTY_OPEN_SLAVE_TOOSHORT 13
 
 long pty_init(void);
-long pty_getpty ( int *fd, char *slave, int slavelength);
+long pty_getpty ( int *fd, char *slave, size_t slavelength);
 
 long pty_open_slave (const char *slave, int *fd);
 long pty_open_ctty (const char *slave, int *fd);
@@ -64,7 +65,8 @@ long pty_cleanup(char *slave, int pid, int update_utmp);
 struct sockaddr;
 #endif
 
-long pty_make_sane_hostname(const struct sockaddr *, int, int, int, char **);
+long pty_make_sane_hostname(const struct sockaddr *, size_t, int, int,
+			    char **);
 
 const char *pty_error_message(long code);
 

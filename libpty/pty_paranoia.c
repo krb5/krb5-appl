@@ -184,8 +184,6 @@
  * non-root.
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 #include <sys/wait.h>
 #include <stdlib.h>

@@ -42,7 +42,8 @@ const char *error_table[] = {
 
 const char *pty_error_message(long code)
 {
-    if (code < 0 || code >= (sizeof(error_table) / sizeof(*error_table)))
+    if (code < 0 ||
+	(size_t) code >= (sizeof(error_table) / sizeof(*error_table)))
         return "Unknown libpty error code";
     return error_table[code];
 }

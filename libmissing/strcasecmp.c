@@ -31,14 +31,9 @@
  * SUCH DAMAGE.
  */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 #include <sys/types.h>
-#ifdef HAVE_STRING_H
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 /* based on @(#)strcasecmp.c	8.1 (Berkeley) 6/4/93 */
 
@@ -85,8 +80,7 @@ static const u_char charmap[] = {
 };
 
 int
-strcasecmp(s1, s2)
-	const char *s1, *s2;
+strcasecmp(const char *s1, const char *s2)
 {
 	register const u_char *cm = charmap,
 			*us1 = (const u_char *)s1,
@@ -99,9 +93,7 @@ strcasecmp(s1, s2)
 }
 
 int
-strncasecmp(s1, s2, n)
-	const char *s1, *s2;
-	register size_t n;
+strncasecmp(const char *s1, const char *s2, size_t n)
 {
 	if (n != 0) {
 		register const u_char *cm = charmap,

@@ -116,7 +116,8 @@ another(pargc, pargv, prompt)
 	char ***pargv;
 	char *prompt;
 {
-        int len = strlen(line), ret;
+	size_t len = strlen(line);
+	int ret;
 	extern sig_t intr();
 
 	if (len >= sizeof(line) - 3) {

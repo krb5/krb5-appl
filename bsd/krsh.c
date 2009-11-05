@@ -27,6 +27,8 @@ char copyright[] =
 
 /* based on @(#)rsh.c	5.7 (Berkeley) 9/20/88 */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>

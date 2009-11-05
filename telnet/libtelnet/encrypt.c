@@ -771,7 +771,7 @@ static void encrypt_keyid(kp, keyid, len)
 		if (ep->keyid)
 			(void)(*ep->keyid)(dir, kp->keyid, &kp->keylen);
 
-	} else if ((len != kp->keylen) || 
+	} else if ((len != (unsigned int) kp->keylen) || 
 		   (memcmp(keyid, kp->keyid, len) != 0)) {
 		/*
 		 * Length or contents are different

@@ -20,8 +20,6 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>

@@ -18,6 +18,8 @@
  * dump-utmp.c: dump utmp and utmpx format files for debugging purposes.
  */
 
+#include <autoconf.h>
+
 #include <sys/types.h>
 #include <sys/file.h>
 #include <fcntl.h>

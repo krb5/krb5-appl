@@ -271,7 +271,8 @@ main(argc, argv, envp)
 	char *argv[];
 	char **envp;
 {
-	int addrlen, c, on = 1, tos, port = -1;
+	socklen_t addrlen;
+	int c, on = 1, tos, port = -1;
 	extern char *optarg;
 	extern int optopt;
 	char *option_string = "AaCcdElp:T:t:U:u:vw:";
@@ -725,7 +726,7 @@ user(name)
 		int result;
 #ifdef GSSAPI
 		if (auth_type && strcmp(auth_type, "GSSAPI") == 0) {
-			int len;
+			size_t len;
 
 			authorized = ftpd_gss_userok(&client_name, name) == 0;
 			len = sizeof("GSSAPI user  is not authorized as "
@@ -1142,8 +1143,10 @@ retrieve(cmd, name)
 	pdata = -1;
 done:
 	(*closefunc)(fin);
-	if (logging > 2 && !cmd)
-	        syslog(LOG_NOTICE, "get: %i bytes transferred", byte_count);
+	if (logging > 2 && !cmd) {
+	        syslog(LOG_NOTICE, "get: %lu bytes transferred",
+		       (unsigned long) byte_count);
+	}
 }
 
 void
@@ -1212,8 +1215,10 @@ store_file(name, fmode, unique)
 	pdata = -1;
 done:
 	(*closefunc)(fout);
-	if (logging > 2)
-	        syslog(LOG_NOTICE, "put: %i bytes transferred", byte_count);
+	if (logging > 2) {
+	        syslog(LOG_NOTICE, "put: %lu bytes transferred",
+		       (unsigned long) byte_count);
+	}
 }
 
 FILE *
@@ -1280,7 +1285,8 @@ dataconn(name, size, fmode)
 	else
 		sizebuf[0] = '\0';
 	if (pdata >= 0) {
-		int s, fromlen = sizeof(data_dest);
+		int s;
+		socklen_t fromlen = sizeof(data_dest);
 
 		s = accept(pdata, (struct sockaddr *)&data_dest, &fromlen);
 		if (s < 0) {
@@ -1532,7 +1538,8 @@ statfilecmd(filename)
 {
 	char line[FTP_BUFSIZ];
 	FILE *fin;
-	int c, n;
+	int c;
+	size_t n;
 	char str[FTP_BUFSIZ], *p;
 
 	if (strlen(filename) + sizeof("/bin/ls -lgA ")
@@ -1682,7 +1689,8 @@ reply(n, fmt, p0, p1, p2, p3, p4, p5)
 		 * radix_encode, gss_seal, plus slop.
 		 */
 		char in[FTP_BUFSIZ*3/2], out[FTP_BUFSIZ*3/2];
-		int length = 0, kerror;
+		size_t length = 0;
+		int kerror;
 		if (n) snprintf(in, sizeof(in), "%d%c", n, cont_char);
 		else in[0] = '\0';
 		strncat(in, buf, sizeof (in) - strlen(in) - 1);
@@ -1725,7 +1733,9 @@ reply(n, fmt, p0, p1, p2, p3, p4, p5)
 		if (length >= sizeof(in) / 4 * 3) {
 			syslog(LOG_ERR, "input to radix_encode too long");
 			fputs(in, stdout);
-		} else if ((kerror = radix_encode(out, in, &length, 0))) {
+		} else if ((kerror = radix_encode((unsigned char *) out,
+						  (unsigned char *) in,
+						  &length, 0))) {
 			syslog(LOG_ERR, "Couldn't encode reply (%s)",
 					radix_error(kerror));
 			fputs(in,stdout);
@@ -2007,7 +2017,7 @@ myoob(sig)
 void
 passive()
 {
-	int len;
+	socklen_t len;
 	register char *p, *a;
 
 	pdata = socket(AF_INET, SOCK_STREAM, 0);
@@ -2127,9 +2137,10 @@ char *atype;
 
 int
 auth_data(adata)
-char *adata;
+unsigned char *adata;
 {
-	int kerror, length;
+	int kerror;
+	size_t length;
 
 	if (auth_type) {
 		reply(503, "Authentication already established");
@@ -2146,14 +2157,14 @@ char *adata;
 		gss_cred_id_t server_creds, deleg_creds;
 		gss_name_t client;
 		OM_uint32 ret_flags;
-		int rad_len;
+		size_t rad_len;
 		gss_buffer_desc name_buf;
 		gss_name_t server_name;
 		OM_uint32 acquire_maj, acquire_min, accept_maj, accept_min,
 				stat_maj, stat_min;
 		gss_OID mechid;
 		gss_buffer_desc tok, out_tok;
-		char gbuf[FTP_BUFSIZ];
+		unsigned char gbuf[FTP_BUFSIZ];
 		u_char gout_buf[FTP_BUFSIZ];
 		char localname[MAXHOSTNAMELEN];
 		char service_name[MAXHOSTNAMELEN+10];

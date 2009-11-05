@@ -226,7 +226,7 @@ FILE *stream;
 int 
 secure_write(fd, buf, nbyte)
 int fd;
-unsigned char *buf;
+char *buf;
 unsigned int nbyte;
 {
 	unsigned int i;
@@ -235,7 +235,7 @@ unsigned int nbyte;
 	if (dlevel == PROT_C)
 		return(write(fd,buf,nbyte));
 	for (i=0; nbyte>0; nbyte--)
-		if ((c = secure_putbyte(fd, buf[i++])) < 0)
+		if ((c = secure_putbyte(fd, (unsigned char) buf[i++])) < 0)
 			return(c);
 	return(i);
 }
@@ -255,8 +255,6 @@ unsigned int nbyte;
 	static unsigned int bufsize;	/* size of outbuf */
 	ftp_int32 length = 0;
 	ftp_uint32 net_len;
-	unsigned int fudge = smaxbuf - smaxqueue; /* Difference in length
-						     buffer lengths required */
 
 	/* Other auth types go here ... */
 #ifdef GSSAPI
@@ -330,7 +328,7 @@ int fd;
 				     length, MAX);
 			return(ERR);
 		}
-		if ((kerror = looping_read(fd, (char *) ucbuf, (int) length)) != length) {
+		if ((kerror = looping_read(fd, (char *) ucbuf, (int) length)) != (int) length) {
 			secure_error("Couldn't read %u byte PROT buffer: %s",
 					length, kerror == -1 ?
 					strerror(errno) : "premature EOF");

@@ -25,7 +25,7 @@ char copyright[] =
  All rights reserved.\n";
 #endif /* not lint */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 /* based on @(#)login.c	5.25 (Berkeley) 1/6/89 */
 
@@ -83,7 +83,9 @@ int login_accept_passwd = 0;
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <netdb.h>
 
+#include <time.h>
 #include <utmp.h>
 #include <signal.h>
 
@@ -142,7 +144,6 @@ typedef sigtype (*handler)();
 #ifdef KRB5_GET_TICKETS
 #include <krb5.h>
 #include <profile.h>
-#include <k5-platform.h>
 #include "com_err.h"
 #define KRB5_ENV_CCNAME "KRB5CCNAME"
 #endif /* KRB5_GET_TICKETS */
@@ -440,7 +441,7 @@ char ccfile[MAXPATHLEN+6];	/* FILE:path+\0 */
 int krbflag;			/* set if tickets have been obtained */
 #endif /* KRB5_GET_TICKETS */
 
-void k_init (ttyn)
+static void k_init (ttyn)
     char *ttyn;
 {
 #ifdef KRB5_GET_TICKETS
@@ -919,7 +920,7 @@ int main(argc, argv)
 	 */
 
 	if (fflag && pwd) {
-	    int uid = (int) getuid();
+	    uid_t uid = getuid();
 	    passwd_req = (uid && uid != pwd->pw_uid);
 	}
 
@@ -1070,15 +1071,10 @@ int main(argc, argv)
     }
 
     /* nothing else left to fail -- really log in */
-    {
-	struct utmp utmp;
-
-	login_time = time(&utmp.ut_time);
-	if ((retval = pty_update_utmp(PTY_USER_PROCESS, getpid(), username,
-				      ttyn, hostname,
-				      PTY_TTYSLOT_USABLE)) < 0)
-	    com_err (argv[0], retval, "while updating utmp");
-    }
+    login_time = time(NULL);
+    if ((retval = pty_update_utmp(PTY_USER_PROCESS, getpid(), username, ttyn,
+				  hostname, PTY_TTYSLOT_USABLE)) < 0)
+	com_err (argv[0], retval, "while updating utmp");
 
     quietlog = access(HUSHLOGIN, F_OK) == 0;
     dolastlog(hostname, quietlog, tty);

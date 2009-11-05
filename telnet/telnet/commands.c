@@ -2418,7 +2418,7 @@ tn(argc, argv)
 {
 #if	defined(IP_OPTIONS) && defined(IPPROTO_IP)
     char *srp = 0;
-    int srlen;
+    int srlen = 0;
 #endif
     char *cmd, *hostp = 0, *portp = 0, *volatile user = 0;
     struct addrinfo *addrs = 0, *addrp;
@@ -2497,7 +2497,7 @@ tn(argc, argv)
 	if (temp == 0) {
 	    herror(srp);
 	    return 0;
-	} else if (temp == -1) {
+	} else if (temp == (unsigned long) -1) {
 	    printf("Bad source route option: %s\r\n", hostp);
 	    return 0;
 	} else {

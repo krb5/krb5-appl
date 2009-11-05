@@ -33,11 +33,7 @@
 
 /* based on @(#)getopt.c	8.1 (Berkeley) 6/4/93 */
 
-#include <autoconf.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <k5-platform.h>
 
 /*
  * get option letter from argument vector
@@ -53,10 +49,7 @@ char	*optarg;		/* argument associated with option */
 #define	EMSG	""
 
 int
-getopt(nargc, nargv, ostr)
-	int nargc;
-	char * const *nargv;
-	const char *ostr;
+getopt(int nargc, char *const *nargv, const char *ostr)
 {
 	static char *place = EMSG;		/* option letter processing */
 	register char *oli;			/* option letter list index */

@@ -104,6 +104,7 @@ int gettimeofday(struct timeval *tv, void *tz);
 #include <pwd.h>
 #endif
 
+#include <arpa/inet.h>
 #include <arpa/ftp.h>
 #include <arpa/telnet.h>
 
@@ -200,7 +201,7 @@ hookup(char* host, int port)
 
 	memset(&hisctladdr, 0, sizeof (hisctladdr));
 	hisctladdr.sin_addr.s_addr = inet_addr(host);
-	if (hisctladdr.sin_addr.s_addr != -1) {
+	if (hisctladdr.sin_addr.s_addr != INADDR_NONE) {
 		hisctladdr.sin_family = AF_INET;
 		(void) strncpy(hostnamebuf, host, sizeof(hostnamebuf));
 	} else {
@@ -426,7 +427,7 @@ cmdabort(int sig)
 static int secure_command(char* cmd)
 {
 	unsigned char in[FTP_BUFSIZ], out[FTP_BUFSIZ];
-	int length;
+	size_t length;
 
 	if (auth_type && clevel != PROT_C) {
 #ifdef GSSAPI
@@ -472,8 +473,9 @@ static int secure_command(char* cmd)
 		}
 		fprintf(cout, "%s %s", clevel == PROT_P ? "ENC" : "MIC", in);
 		if(debug) 
-		  fprintf(stderr, "secure_command(%s)\nencoding %d bytes %s %s\n",
-			  cmd, length, clevel==PROT_P ? "ENC" : "MIC", in);
+		  fprintf(stderr, "secure_command(%s)\nencoding %lu bytes %s %s\n",
+			  cmd, (unsigned long) length,
+			  clevel==PROT_P ? "ENC" : "MIC", in);
 	} else	fputs(cmd, cout);
 	fprintf(cout, "\r\n");
 	(void) fflush(cout);
@@ -662,7 +664,7 @@ int getreply(int expecteof)
 		    }
 #endif
 		    else {
-			int len;
+			size_t len;
 			kerror = radix_encode((unsigned char *)obuf,
 					      (unsigned char *)ibuf, 
 					      &len, 1);
@@ -779,7 +781,7 @@ void sendrequest(char *cmd, char *local, char *remote, int printnames)
 	volatile sig_t oldintr, oldintp;
 	volatile long bytes = 0, hashbytes = HASHBYTES;
 	char *volatile lmode;
-	unsigned char buf[FTP_BUFSIZ], *bufp;
+	char buf[FTP_BUFSIZ], *bufp;
 
 	if (verbose && printnames) {
 		if (local && *local != '-')
@@ -1905,7 +1907,7 @@ int do_auth()
 	int oldverbose = verbose;
 #ifdef GSSAPI
 	u_char out_buf[FTP_BUFSIZ];
-	int i;
+	size_t i;
 #endif /* GSSAPI */
 
 	if (auth_type) return(1);	/* auth already succeeded */
@@ -1985,7 +1987,7 @@ int do_auth()
 	      }
 	    
 	      if (send_tok.length != 0) {
-		int len = send_tok.length;
+		size_t len = send_tok.length;
 		reply_parse = "ADAT="; /* for command() later */
 		oldverbose = verbose;
 		verbose = (trial == n_gss_trials-1)?0:-1;

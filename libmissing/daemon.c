@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 #include <fcntl.h>
 #include <sys/types.h>
@@ -46,8 +46,7 @@
 #endif
 
 int
-daemon(nochdir, noclose)
-	int nochdir, noclose;
+daemon(int nochdir, int noclose)
 {
 	int cpid;
 

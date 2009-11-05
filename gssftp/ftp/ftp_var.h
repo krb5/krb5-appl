@@ -278,7 +278,7 @@ struct cmd *getcmd (char *);
 int ruserpass (char *, char **, char **, char **);
 
 /* radix.h */
-int radix_encode (unsigned char *, unsigned char *, int *, int);
+int radix_encode (unsigned char *, unsigned char *, size_t *, int);
 char *radix_error (int);
 
 /* getpass.c */

@@ -256,7 +256,7 @@ int server_message (int);
 void oob (void);
 krb5_sigtype	lostpeer (int);
 void setsignal (int sig, krb5_sigtype (*act)());
-static int read_wrapper(int fd, char *buf, int size, int *got_esc);
+static int read_wrapper(int fd, char *buf, size_t size, int *got_esc);
 static void prf(char *f);
 void try_normal(char **);
 static void mode(int);
@@ -557,7 +557,7 @@ main(argc, argv)
     }
 #ifdef POSIX_TERMIOS
 	if (tcgetattr(0, &ttyb) == 0) {
-		int ospeed = cfgetospeed (&ttyb);
+		speed_t ospeed = cfgetospeed (&ttyb);
 
                 term[sizeof(term) - 1] = '\0';
 		(void) strncat(term, "/", sizeof(term) - 1 - strlen(term));
@@ -1119,7 +1119,7 @@ static void writer()
 static int read_wrapper(fd,buf,size,got_esc) 
      int fd;
      char *buf;
-     int size;
+     size_t size;
      int *got_esc;
 {
   static char tbuf[1024];

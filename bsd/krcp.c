@@ -31,6 +31,8 @@ char copyright[] =
       * rcp
       */
 
+#include <autoconf.h>
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -112,11 +114,11 @@ int	userid;
 int	port = 0;
 
 struct buffer {
-    unsigned int cnt;
+    size_t	 cnt;
     char	*buf;
 };
 
-struct buffer *allocbuf(struct buffer *, int, int);
+static struct buffer *allocbuf(struct buffer *, int, size_t);
 
 #define	NULLBUF	(struct buffer *) 0
   
@@ -1139,27 +1141,26 @@ void sink(argc, argv)
 
 struct buffer *allocbuf(bp, fd, blksize)
      struct buffer *bp;
-     int fd, blksize;
+     int fd;
+     size_t blksize;
 {
     struct stat stb;
-    int size;
     
     if (fstat(fd, &stb) < 0) {
 	error("rcp: fstat: %s\n", error_message(errno));
 	return (NULLBUF);
     }
 
-    size = blksize;
-    if (bp->cnt < size) {
+    if (bp->cnt < blksize) {
 	if (bp->buf != 0)
 	  free(bp->buf);
-	bp->buf = (char *)malloc((unsigned) size);
+	bp->buf = malloc(blksize);
 	if (bp->buf == 0) {
 	    error("rcp: malloc: out of memory\n");
 	    return (NULLBUF);
 	}
     }
-    bp->cnt = size;
+    bp->cnt = blksize;
     return (bp);
 }
 

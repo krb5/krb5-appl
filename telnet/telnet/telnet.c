@@ -166,7 +166,7 @@ unsigned char telopt_environ = TELOPT_NEW_ENVIRON;
 # define telopt_environ TELOPT_NEW_ENVIRON
 #endif
 
-jmp_buf	toplevel = { 0 };
+jmp_buf	toplevel;
 jmp_buf	peerdied;
 
 int	flushline;
@@ -1124,7 +1124,7 @@ lm_will(cmd, len)
     default:
 	str_lm[3] = DONT;
 	str_lm[4] = cmd[0];
-	if (NETROOM() > sizeof(str_lm)) {
+	if ((size_t) NETROOM() > sizeof(str_lm)) {
 	    ring_supply_data(&netoring, str_lm, sizeof(str_lm));
 	    printsub('>', &str_lm[2], sizeof(str_lm)-2);
 	}
@@ -1164,7 +1164,7 @@ lm_do(cmd, len)
     default:
 	str_lm[3] = WONT;
 	str_lm[4] = cmd[0];
-	if (NETROOM() > sizeof(str_lm)) {
+	if ((size_t) NETROOM() > sizeof(str_lm)) {
 	    ring_supply_data(&netoring, str_lm, sizeof(str_lm));
 	    printsub('>', &str_lm[2], sizeof(str_lm)-2);
 	}
@@ -1209,7 +1209,7 @@ lm_mode(cmd, len, init)
 	str_lm_mode[4] = linemode;
 	if (!init)
 	    str_lm_mode[4] |= MODE_ACK;
-	if (NETROOM() > sizeof(str_lm_mode)) {
+	if ((size_t) NETROOM() > sizeof(str_lm_mode)) {
 	    ring_supply_data(&netoring, str_lm_mode, sizeof(str_lm_mode));
 	    printsub('>', &str_lm_mode[2], sizeof(str_lm_mode)-2);
 	}
@@ -1335,7 +1335,7 @@ unsigned char slc_import_def[] = {
 slc_import(def)
     int def;
 {
-    if (NETROOM() > sizeof(slc_import_val)) {
+    if ((size_t) NETROOM() > sizeof(slc_import_val)) {
 	if (def) {
 	    ring_supply_data(&netoring, slc_import_def, sizeof(slc_import_def));
 	    printsub('>', &slc_import_def[2], sizeof(slc_import_def)-2);
@@ -1481,7 +1481,7 @@ slc_add_reply(func, flags, value)
 	unsigned char flags;
 	cc_t value;
 {
-	if ((slc_replyp - slc_reply) + 6 > sizeof(slc_reply))
+	if ((size_t)(slc_replyp - slc_reply + 6) > sizeof(slc_reply))
 		return;
 	if ((*slc_replyp++ = func) == IAC)
 		*slc_replyp++ = IAC;
@@ -1494,7 +1494,7 @@ slc_add_reply(func, flags, value)
     void
 slc_end_reply()
 {
-    register int len;
+    register size_t len;
 
     len = slc_replyp - slc_reply;
     if (len <= 4 || (len + 2 > sizeof(slc_reply)))
@@ -1502,7 +1502,7 @@ slc_end_reply()
     *slc_replyp++ = IAC;
     *slc_replyp++ = SE;
     len += 2;
-    if (NETROOM() > len) {
+    if ((size_t) NETROOM() > len) {
 	ring_supply_data(&netoring, slc_reply, slc_replyp - slc_reply);
 	printsub('>', &slc_reply[2], slc_replyp - slc_reply - 2);
     }

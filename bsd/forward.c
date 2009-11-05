@@ -20,13 +20,13 @@
  */
 
 #if defined(KERBEROS) || defined(KRB5)
-#include <stdio.h>
-#include <netdb.h>
+#include <k5-platform.h>
+#include <krb5.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include <krb5.h>
-#include <k5-platform.h>
+#include <netdb.h>
+#include <unistd.h>
 
 #include "defines.h"
 

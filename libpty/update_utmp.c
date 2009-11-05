@@ -316,8 +316,6 @@
  * username both in utmp and wtmp.
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 #include "k5-platform.h"
 
@@ -508,6 +506,7 @@ pty_update_utmp(int process_type, int pid, const char *username,
     const char *cp;
     size_t len;
     char utmp_id[5];
+    struct timeval tv;
 
     /*
      * Zero things out in case there are fields we don't handle here.
@@ -576,11 +575,13 @@ pty_update_utmp(int process_type, int pid, const char *username,
     if (process_type != PTY_LOGIN_PROCESS)
 	utxtmp = best_utxent(&utx);
 
-#ifdef HAVE_SETUTXENT
-    if (gettimeofday(&utx.ut_tv, NULL))
+    if (gettimeofday(&tv, NULL))
 	return errno;
+#ifdef HAVE_SETUTXENT
+    utx.ut_tv.tv_sec = tv.tv_sec;
+    utx.ut_tv.tv_usec = tv.tv_usec;
 #else
-    (void)time(&utx.ut_time);
+    utx.ut_time = tv.tv_sec;
 #endif
     /*
      * On what system is there not ut_host?  Unix98 doesn't mandate

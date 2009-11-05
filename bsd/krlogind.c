@@ -910,7 +910,7 @@ void sendoob(fd, byte)
 static int control(pty, cp, n)
      int pty;
      unsigned char *cp;
-     int n;
+     size_t n;
 {
     struct winsize w;
     int pgrp, got_pgrp;
@@ -1008,7 +1008,7 @@ void protocol(f, p)
 	}
 #define	pkcontrol(c)	((c)&(TIOCPKT_FLUSHWRITE|TIOCPKT_NOSTOP|TIOCPKT_DOSTOP))
 	if (FD_ISSET(f, &ibits)) {
-	    fcc = rcmd_stream_read(f, fibuf, sizeof (fibuf), 0);
+	    fcc = rcmd_stream_read(f, (char *) fibuf, sizeof (fibuf), 0);
 	    if (fcc < 0 && ((errno == EWOULDBLOCK) || (errno == EAGAIN))) {
 		fcc = 0;
 	    } else {
@@ -1097,7 +1097,7 @@ void protocol(f, p)
 	}
 
 	if (FD_ISSET(f, &obits) && pcc > 0) {
-	    cc = rcmd_stream_write(f, pbp, pcc, 0);
+	    cc = rcmd_stream_write(f, (char *) pbp, pcc, 0);
 	    if (cc < 0 && ((errno == EWOULDBLOCK) || (errno == EAGAIN))) {
 		/* also shouldn't happen */
 		sleep(5);

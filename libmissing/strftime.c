@@ -33,7 +33,7 @@
 
 /* based on @(#)strftime.c	8.1 (Berkeley) 6/4/93 */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 #include <sys/types.h>
 #include <sys/time.h>
@@ -41,11 +41,6 @@
 #include <tzfile.h>
 #else
 #define TM_YEAR_BASE	1900	/* from <tzfile.h> */
-#endif
-#ifdef	HAVE_STRING_H
-#include <string.h>
-#else
-#include <strings.h>
 #endif
 
 static char *afmt[] = {
@@ -75,11 +70,7 @@ static int _secs __P((const struct tm *));
 static size_t _fmt __P((const char *, const struct tm *));
 
 size_t
-strftime(s, maxsize, format, t)
-	char *s;
-	size_t maxsize;
-	const char *format;
-	const struct tm *t;
+strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
 {
 
 	pt = s;
@@ -93,9 +84,7 @@ strftime(s, maxsize, format, t)
 }
 
 static size_t
-_fmt(format, t)
-	register const char *format;
-	const struct tm *t;
+_fmt(const char *format, const struct tm *t)
 {
 	for (; *format; ++format) {
 		if (*format == '%')
@@ -262,8 +251,7 @@ _fmt(format, t)
 }
 
 static int
-_secs(t)
-	const struct tm *t;
+_secs(const struct tm *t)
 {
 	static char buf[15];
 	register time_t s;
@@ -279,8 +267,7 @@ _secs(t)
 }
 
 static int
-_conv(n, digits, pad)
-	int n, digits, pad;
+_conv(int n, int digits, int pad)
 {
 	static char buf[10];
 	register char *p;
@@ -293,8 +280,7 @@ _conv(n, digits, pad)
 }
 
 static int
-_add(str)
-	register char *str;
+_add(char *str)
 {
 	for (;; ++pt, --gsize) {
 		if (!gsize)

@@ -128,7 +128,7 @@ main(argc, argv)
 	autoencrypt = 0;
 	argc--, argv++;
 	while (argc > 0 && **argv == '-') {
-		for (cp = *argv + 1; *cp; cp++)
+		for (cp = *argv + 1; *cp; cp++) {
 			switch (*cp) {
 
 			case 'd':
@@ -176,7 +176,7 @@ main(argc, argv)
 				  progname);
 			  exit(1);
 			}
-	nextopt:
+		}
 		argc--, argv++;
 	}
 	fromatty = isatty(fileno(stdin));
@@ -553,7 +553,8 @@ void help(argc, argv)
 	register struct cmd *c;
 
 	if (argc == 1) {
-		register int i, j, w, k;
+		register int i, j, w;
+		size_t k;
 		int columns, width = 0, lines;
 		extern int NCMDS;
 

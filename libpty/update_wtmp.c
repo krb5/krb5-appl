@@ -19,8 +19,6 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 
 #if !defined(WTMP_FILE) && defined(_PATH_WTMP)

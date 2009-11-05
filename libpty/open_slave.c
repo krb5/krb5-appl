@@ -21,8 +21,6 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 
 long

@@ -27,6 +27,8 @@
  * Provide {,v}asprintf for platforms that don't have them.
  */
 
+#include <k5-platform.h>
+
 /* On error: BSD: Set *ret to NULL.  GNU: *ret is undefined.
 
    Since we want to be able to use the GNU version directly, we need

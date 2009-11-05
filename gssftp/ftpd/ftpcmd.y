@@ -626,7 +626,7 @@ cmd:		USER SP username CRLF
 		}
 	|	ADAT SP STRING CRLF
 		{
-			auth_data((char *) $3);
+			auth_data((unsigned char *) $3);
 			free($3);
 		}
 	|	QUIT CRLF
@@ -1023,8 +1023,10 @@ ftpd_getline(s, n, iop)
 		return (NULL);
 	*cs++ = '\0';
 	if (auth_type) {
-	    char out[sizeof(cbuf)], *cp;
-	    int len, mic;
+	    unsigned char out[sizeof(cbuf)];
+	    char *cp;
+	    size_t len;
+	    int mic;
 
 
 	    /* Check to see if we have a protected command. */
@@ -1074,15 +1076,15 @@ ftpd_getline(s, n, iop)
 #endif /* NOENCRYPTION */
 	    if ((cp = strpbrk(cs, " \r\n")))
 		*cp = '\0';
-	    kerror = radix_encode(cs, out, &len, 1);
+	    kerror = radix_encode((unsigned char *) cs, out, &len, 1);
 	    if (kerror) {
 		reply(501, "Can't base 64 decode argument to %s command (%s)",
 		      mic ? "MIC" : "ENC", radix_error(kerror));
 		*s = '\0';
 		return(s);
 	    }
-	    if (debug) syslog(LOG_DEBUG, "getline got %d from %s <%s>\n", 
-			      len, cs, mic?"MIC":"ENC");
+	    if (debug) syslog(LOG_DEBUG, "getline got %lu from %s <%s>\n", 
+			      (unsigned long) len, cs, mic?"MIC":"ENC");
 	    clevel = mic ? PROT_S : PROT_P;
 #ifdef GSSAPI
 /* we know this is a MIC or ENC already, and out/len already has the bits */
@@ -1143,14 +1145,15 @@ ftpd_getline(s, n, iop)
                 return(s);
 	    }
 	}
-#endif GSSAPI
+#endif /* GSSAPI */
 
 	if (debug) {
 		if (!strncmp(s, "PASS ", 5) && !guest)
 			syslog(LOG_DEBUG, "command: <PASS XXX>");
 		else
-			syslog(LOG_DEBUG, "command: <%.*s>(%d)",
-			       strlen(s) - 2, s, strlen(s));
+			syslog(LOG_DEBUG, "command: <%.*s>(%lu)",
+			       (int)(strlen(s) - 2), s,
+			       (unsigned long) strlen(s));
 	}
 	return (s);
 }

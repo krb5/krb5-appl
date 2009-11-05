@@ -17,10 +17,9 @@
 
 /* based on @(#)setenv.c	5.2 (Berkeley) 6/27/88 */
 
+#include <k5-platform.h>
+
 #include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 static char *_findenv(char *, int*);
 /*
@@ -29,9 +28,7 @@ static char *_findenv(char *, int*);
  *	"value".  If rewrite is set, replace any current value.
  */
 int
-setenv(name, value, rewrite)
-	register char *name, *value;
-	int rewrite;
+setenv(char *name, char *value, int rewrite)
 {
 	extern char **environ;
 	static int alloced;			/* if allocated space before */
@@ -86,8 +83,7 @@ setenv(name, value, rewrite)
  *	Delete environmental variable "name".
  */
 void
-unsetenv(name)
-	char	*name;
+unsetenv(char *name)
 {
 	extern	char	**environ;
 	register char	**P;
@@ -123,8 +119,7 @@ unsetenv(name)
  *	Returns ptr to value associated with name, if any, else NULL.
  */
 char *
-getenv(name)
-	char *name;
+getenv(char *name)
 {
 	int offset;
 
@@ -142,9 +137,7 @@ getenv(name)
  *	This routine *should* be a static; don't use it.
  */
 static char *
-_findenv(name, offset)
-	register char *name;
-	int *offset;
+_findenv(char *name, int *offset)
 {
 	extern char **environ;
 	register unsigned int len;

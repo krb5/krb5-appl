@@ -13,9 +13,11 @@ static char pad = '=';
 
 int radix_encode(inbuf, outbuf, len, decode)
 unsigned char inbuf[], outbuf[];
-int *len, decode;
+size_t *len;
+int decode;
 {
-	int i,j,D = 0;
+	size_t i,j;
+	int D = 0;
 	char *p;
 	unsigned char c = 0;
 

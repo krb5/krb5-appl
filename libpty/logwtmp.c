@@ -19,8 +19,6 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 
 #if defined(HAVE_SETUTXENT) || defined(HAVE_SETUTENT)
@@ -43,6 +41,7 @@ pty_logwtmp(const char *tty, const char *user, const char *host)
     size_t len;
     const char *cp;
     char utmp_id[5];
+    struct timeval tv;
 #endif
 
 #ifdef HAVE_LOGWTMP
@@ -60,10 +59,12 @@ pty_logwtmp(const char *tty, const char *user, const char *host)
     strncpy(utx.ut_host, host, sizeof(utx.ut_host));
     utx.ut_host[sizeof(utx.ut_host) - 1] = '\0';
 #endif
+    gettimeofday(&tv, NULL);
 #ifdef HAVE_SETUTXENT
-    gettimeofday(&utx.ut_tv, NULL);
+    utx.ut_tv.tv_sec = tv.tv_sec;
+    utx.ut_tv.tv_usec = tv.tv_usec;
 #else
-    (void)time(&utx.ut_time);
+    utx.ut_time = tv.tv_sec;
 #endif
     utx.ut_pid = (loggingin ? getpid() : 0);
     utx.ut_type = (loggingin ? USER_PROCESS : DEAD_PROCESS);

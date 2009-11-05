@@ -33,14 +33,14 @@
 
 /* based on @(#)setsid.c	8.1 (Berkeley) 6/4/93 */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 /*
  * Emulate the functionality of setsid(), called when forking
  * and execing the new process.
  */
 
-extern char *line;
+int
 setsid()
 {
 #ifndef	convex

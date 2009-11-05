@@ -110,8 +110,7 @@ int asprintf(char **, const char *, ...)
     __attribute__((__format__(__printf__, 2, 3)))
 #endif
     ;
-
-#endif /* NEED_VASPRINTF_PROTO */
+#endif /* HAVE_VASPRINTF */
 
 /* Return true if the snprintf return value RESULT reflects a buffer
    overflow for the buffer size SIZE.

@@ -428,13 +428,13 @@ netprintf_ext(int noflush, int seturg, const char *fmt, va_list args)
 	 * number of characters that *would* have been output, not the
 	 * number actually output.
 	 */
-	if (len <= 0 || len > sizeof(buf))
+	if (len <= 0 || (size_t) len > sizeof(buf))
 		return;
-	if (remain < len && !noflush) {
+	if (remain < (size_t) len && !noflush) {
 		netflush();
 		remain = sizeof(netobuf) - (nfrontp - netobuf);
 	}
-	if (remain < len)
+	if (remain < (size_t) len)
 		return;		/* still not enough space? */
 	memcpy(nfrontp, buf, (size_t)len);
 	nfrontp += len;

@@ -33,21 +33,14 @@
 
 /* based on @(#)strdup.c	8.1 (Berkeley) 6/4/93 */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
 #include <sys/types.h>
 
 #include <stddef.h>
-#include <stdlib.h>
-#ifdef	HAVE_STRING_H
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 char *
-strdup(str)
-	const char *str;
+strdup(const char *str)
 {
 	size_t len;
 	char *copy;

@@ -1,5 +1,9 @@
 /* Includes needed by libpty*/
 #ifndef __PTY_INT_H__
+#include <k5-platform.h>
+#include <com_err.h>
+#include "libpty.h"
+
 #include <sys/types.h>
 
 #if defined(_AIX) && defined(_THREAD_SAFE)
@@ -16,8 +20,6 @@
 # undef _THREAD_SAFE
 #endif
 
-#include "autoconf.h"
-
 #ifdef HAVE_UTMP_H
 #include <utmp.h>
 #endif
@@ -31,11 +33,6 @@
 #ifdef __SCO__
 #include <sys/unistd.h>
 #endif
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>
-#endif
-
-#include <stdio.h>
 
 #ifdef HAVE_PTY_H
 #include <pty.h>
@@ -45,8 +42,6 @@
 #include <sys/file.h>
 #include <sys/time.h>
 #include <ctype.h>
-#include <fcntl.h>
-#include <errno.h>
 #include <pwd.h>
      
 #ifdef HAVE_SYS_LABEL_H
@@ -123,7 +118,7 @@ extern int revoke(const char *);
 /* Internal functions */
 long ptyint_void_association(void);
 long ptyint_open_ctty (char *slave, int *fd);
-long ptyint_getpty_ext(int *, char *, int, int);
+long ptyint_getpty_ext(int *, char *, size_t, int);
 #ifdef HAVE_SETUTXENT
 long ptyint_update_wtmpx(struct utmpx *utx);
 #endif

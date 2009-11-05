@@ -33,9 +33,7 @@
 
 /* based on @(#)herror.c	8.1 (Berkeley) 6/4/93 */
 
-#include <autoconf.h>
-
-#include <stdio.h>
+#include <k5-platform.h>
 
 char	*h_errlist[] = {
 	"Error 0",
@@ -52,8 +50,8 @@ int h_errno;		/* In some version of SunOS this is necessary */
  * herror --
  *	print the error indicated by the h_errno value.
  */
-herror(s)
-	const char *s;
+void
+herror(const char *s)
 {
 	if (s && *s) {
 		fprintf(stderr, "%s: ", s);

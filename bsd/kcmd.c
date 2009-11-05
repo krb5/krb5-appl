@@ -46,6 +46,8 @@
  */
 
 /* derived from @(#)rcmd.c	5.17 (Berkeley) 6/27/88 */
+
+#include <autoconf.h>
      
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -295,7 +297,7 @@ setup_secondary_channel (int s, int *fd2p, int *lportp, int *addrfamilyp,
     } else {
     	char num[8];
     	socklen_t len = sizeof (*fromp);
-	size_t slen;
+	ssize_t slen;
     	int s2 = getport(lportp, addrfamilyp), s3;
 	fd_set rfds, xfds;
 	struct timeval waitlen;
@@ -899,7 +901,7 @@ static int v5_des_read(fd, buf, len, secondary)
     store_ptr = storage;
     nstored = rd_len;
     if (use_ivecs) {
-	int rd_len2;
+	size_t rd_len2;
 	rd_len2 = storage[0] & 0xff;
 	rd_len2 <<= 8; rd_len2 |= storage[1] & 0xff;
 	rd_len2 <<= 8; rd_len2 |= storage[2] & 0xff;

@@ -19,8 +19,6 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
 
 /* * The following is an array of modules that should be pushed on the

@@ -4,10 +4,8 @@
  * Unix systems.  This is part of UNICOS 7.0 and later.
  */
 
-#include <autoconf.h>
+#include <k5-platform.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/types.h>
 #include <netdb.h>
 #include <errno.h>

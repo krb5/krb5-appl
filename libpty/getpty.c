@@ -20,13 +20,11 @@
  * 
  */
 
-#include "com_err.h"
-#include "libpty.h"
 #include "pty-int.h"
-#include "k5-platform.h"
+#include <k5-platform.h>
 
 long
-ptyint_getpty_ext(int *fd, char *slave, int slavelength, int do_grantpt)
+ptyint_getpty_ext(int *fd, char *slave, size_t slavelength, int do_grantpt)
 {
 #if !defined(HAVE__GETPTY) && !defined(HAVE_OPENPTY)
     char *cp;
@@ -106,7 +104,7 @@ ptyint_getpty_ext(int *fd, char *slave, int slavelength, int do_grantpt)
 	}
 	ptynum = (int)(stb.st_rdev&0xFF);
 	snprintf(slavebuf, sizeof(slavebuf), "/dev/ttyp%x", ptynum);
-	if (strlen(slavebuf) > slavelength - 1) {
+	if (strlen(slavebuf) + 1 > slavelength) {
 	    close(*fd);
 	    *fd = -1;
 	    return PTY_GETPTY_SLAVE_TOOLONG;
@@ -127,7 +125,7 @@ ptyint_getpty_ext(int *fd, char *slave, int slavelength, int do_grantpt)
 
 		/* got pty */
 		slavebuf[sizeof("/dev/") - 1] = 't';
-		if (strlen(slavebuf) > slavelength -1) {
+		if (strlen(slavebuf) + 1 > slavelength) {
 		    close(*fd);
 		    *fd = -1;
 		    return PTY_GETPTY_SLAVE_TOOLONG;
@@ -143,7 +141,7 @@ ptyint_getpty_ext(int *fd, char *slave, int slavelength, int do_grantpt)
 }
 
 long
-pty_getpty(int *fd, char *slave, int slavelength)
+pty_getpty(int *fd, char *slave, size_t slavelength)
 {
     return ptyint_getpty_ext(fd, slave, slavelength, 1);
 }

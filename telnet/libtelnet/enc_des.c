@@ -164,10 +164,10 @@ static void ecb_encrypt(stp, in, out)
 	krb5_enc_data dout;
 	
 	din.length = 8;
-	din.data = in;
+	din.data = (char *) in;
 
 	dout.ciphertext.length = 8;
-	dout.ciphertext.data = out;
+	dout.ciphertext.data = (char *) out;
 	dout.enctype = ENCTYPE_UNKNOWN;
 
 	code = krb5_c_encrypt(telnet_context, &stp->str_key, 0, 0,
@@ -238,7 +238,7 @@ fb64_start(fbp, dir, server)
 	int dir;
 	int server;
 {
-	int x;
+	size_t x;
 	unsigned char *p;
 	register int state;
 
@@ -275,7 +275,7 @@ fb64_start(fbp, dir, server)
 		{
 			krb5_data d;
 
-			d.data = fbp->temp_feed;
+			d.data = (char *) fbp->temp_feed;
 			d.length = sizeof(fbp->temp_feed);
 
 			if (krb5_c_random_make_octets(telnet_context, &d))

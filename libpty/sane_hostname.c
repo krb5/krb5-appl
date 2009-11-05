@@ -20,10 +20,8 @@
  * express or implied warranty.
  * 
  */
-#include "com_err.h"
 #include "pty-int.h"
 #include <sys/socket.h>
-#include "libpty.h"
 #include <arpa/inet.h>
 
 #include "socket-utils.h"
@@ -37,7 +35,7 @@ downcase (char *s)
 }
 
 long
-pty_make_sane_hostname(const struct sockaddr *addr, int maxlen,
+pty_make_sane_hostname(const struct sockaddr *addr, size_t maxlen,
 		       int strip_ldomain, int always_ipaddr, char **out)
 {
     struct addrinfo *ai = 0;

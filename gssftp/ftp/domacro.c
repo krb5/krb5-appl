@@ -94,7 +94,7 @@ TOP:
 				    }
 				    cp1--;
 				    if (argc - 2 >= j) {
-                                        if(cp2 + strlen(argv[j+1]) - line < sizeof(line))
+                                        if(cp2 - line + strlen(argv[j+1]) < sizeof(line))
 					(void) strncpy(cp2, argv[j+1],
 						       sizeof(line) - 1 -
 						       (cp2 - line));
@@ -107,7 +107,7 @@ TOP:
 					loopflg = 1;
 					cp1++;
 					if (count < argc) {
-                                           if(cp2 + strlen(argv[count]) - line < sizeof(line))
+                                           if(cp2 - line + strlen(argv[count]) < sizeof(line))
 					   (void) strncpy(cp2, argv[count],
 							  sizeof(line) - 1 -
 							  (cp2 - line));
