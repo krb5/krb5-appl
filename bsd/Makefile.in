@@ -76,6 +76,4 @@ install::
 	$(INSTALL_DATA) $(srcdir)/login.M \
 		${DESTDIR}$(SERVER_MANDIR)/login.krb5.8
 
-getdtablesize.o: $(srcdir)/getdtablesize.c
-
 kcmd.o krcp.o krlogin.o krlogind.o krsh.o krshd.o forward.o: defines.h
