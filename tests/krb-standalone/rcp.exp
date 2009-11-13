@@ -200,11 +200,11 @@ proc rcp_test { } {
     # stop_rsh_daemon
 
     start_rsh_daemon
-    rcp_one_test "encrypted rcp from" "-x -c $env(KRB5CCNAME) -C $env(KRB5_CONFIG)" "$hostname:" ""
+    rcp_one_test "encrypted rcp from" "-x -c $env(KRB5CCNAME)" "$hostname:" ""
     stop_rsh_daemon
 
     start_rsh_daemon
-    rcp_one_test "encrypted rcp to" "-x -c $env(KRB5CCNAME) -C $env(KRB5_CONFIG)" "" "$hostname:"
+    rcp_one_test "encrypted rcp to" "-x -c $env(KRB5CCNAME)" "" "$hostname:"
     stop_rsh_daemon
 
     # Doing rcp between two hosts actually just executes rsh rcp on

@@ -99,10 +99,6 @@ instead of the remote host's realm as determined by
 change the default credentials cache file to 
 .I ccachefile
 .TP
-\fB\-C\fP \fIconfigfile\fP
-change the default configuation file to
-.I configfile
-.TP
 .B \-r
 if any of the source files are directories, copy each subtree rooted at
 that name; in this case the destination must be a directory.

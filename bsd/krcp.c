@@ -78,7 +78,6 @@ char copyright[] =
 int sock;
 char *krb_realm = NULL;
 char *krb_cache = NULL;
-char *krb_config = NULL;
 krb5_encrypt_block eblock;         /* eblock for encrypt/decrypt */
 krb5_context bsd_context;
 
@@ -89,8 +88,7 @@ char	*strsave();
 #endif
 int	rcmd_stream_write(), rcmd_stream_read();
 void 	usage(void), sink(int, char **),
-    source(int, char **), rsource(char *, struct stat *), verifydir(char *), 
-    answer_auth(char *, char *);
+    source(int, char **), rsource(char *, struct stat *), verifydir(char *);
 int	response(void), hosteq(char *, char *), okname(char *), 
     susystem(char *);
 int	encryptflag = 0;
@@ -210,14 +208,7 @@ int main(argc, argv)
 		exit(1);
 	    }
 	    goto next_arg;
-	  case 'C':		/* Change default config file */
-	    argc--, argv++;
-	    if (argc == 0) 
-	      usage();
-	    if(!(krb_config = strdup(*argv))){
-		fprintf(stderr, "rcp: Cannot malloc.\n");
-		exit(1);
-	    }
+	  case 'C':		/* Defunct option, accept for compatibility. */
 	    goto next_arg;
 	  case 'P':
 	    if (!strcmp (*argv, "O"))
@@ -236,10 +227,6 @@ int main(argc, argv)
 	  case 'f':		/* "from" */
 	    iamremote = 1;
 	    rcmd_stream_init_normal();
-#if defined(KERBEROS)
-	    if (encryptflag)
-	      answer_auth(krb_config, krb_cache);
-#endif /* KERBEROS */
 
 	    (void) response();
 	    source(--argc, ++argv);
@@ -248,10 +235,6 @@ int main(argc, argv)
 	  case 't':		/* "to" */
 	    iamremote = 1;
 	    rcmd_stream_init_normal();
-#if defined(KERBEROS)
-	    if (encryptflag)
-	      answer_auth(krb_config, krb_cache);
-#endif /* KERBEROS */
 
 	    sink(--argc, ++argv);
 	    exit(errs);
@@ -289,7 +272,7 @@ int main(argc, argv)
     }
 
 #ifdef KERBEROS
-    if (asprintf(&cmd, "%srcp %s%s%s%s%s%s%s%s%s",
+    if (asprintf(&cmd, "%srcp %s%s%s%s%s%s%s",
 		 encryptflag ? "-x " : "",
 
 		 iamrecursive ? " -r" : "", pflag ? " -p" : "", 
@@ -297,9 +280,7 @@ int main(argc, argv)
 		 krb_realm != NULL ? " -k " : "",
 		 krb_realm != NULL ? krb_realm : "",
 		 krb_cache != NULL ? " -c " : "",
-		 krb_cache != NULL ? krb_cache : "",
-		 krb_config != NULL ? " -C " : "",
-		 krb_config != NULL ? krb_config : "") < 0) {
+		 krb_cache != NULL ? krb_cache : "") < 0) {
 	fprintf(stderr, "rcp: Cannot malloc.\n");
 	exit(1);
     }
@@ -1278,85 +1259,6 @@ char **save_argv(argc, argv)
 #else
 #define SIZEOF_INADDR sizeof(struct in_addr)
 #endif
-
-
-/* This function is mostly vestigial, since under normal operation
- * the -x flag doesn't get set for the server process for encrypted
- * rcp.  It only gets called by beta clients attempting user-to-user
- * authentication. */
-void
-  answer_auth(config_file, ccache_file)
-    char *config_file;
-    char *ccache_file;
-{
-    krb5_data pname_data, msg;
-    krb5_creds creds, *new_creds;
-    krb5_ccache cc;
-    krb5_error_code status;
-    krb5_auth_context auth_context = NULL;
-    
-    if (config_file) {
-    	const char * filenames[2];
-    	filenames[1] = NULL;
-    	filenames[0] = config_file;
-    	if ((status = krb5_set_config_files(bsd_context, filenames)))
-	    exit(1);
-    }
-    
-    memset (&creds, 0, sizeof(creds));
-
-    if ((status = krb5_read_message(bsd_context, (krb5_pointer)&rem,
-				    &pname_data)))
-	exit(1);
-    
-    if ((status = krb5_read_message(bsd_context, (krb5_pointer) &rem,
-				    &creds.second_ticket)))
-	exit(1);
-    
-    if (ccache_file == NULL) {
-    	if ((status = krb5_cc_default(bsd_context, &cc)))
-	    exit(1);
-    } else {
-	if ((status = krb5_cc_resolve(bsd_context, ccache_file, &cc)))
-	    exit(1);
-    }
-
-    if ((status = krb5_cc_get_principal(bsd_context, cc, &creds.client)))
-	exit(1);
-
-    if ((status = krb5_parse_name(bsd_context, pname_data.data,
-				  &creds.server)) )
-	exit(1);
-
-    krb5_free_data_contents(bsd_context, &pname_data);
-
-    if ((status = krb5_get_credentials(bsd_context, KRB5_GC_USER_USER, cc, 
-				       &creds, &new_creds)))
-	exit(1);
-
-    if ((status = krb5_mk_req_extended(bsd_context, &auth_context,
-				       AP_OPTS_USE_SESSION_KEY,
-				       NULL, new_creds, &msg)))
-	exit(1);
-    
-    if ((status = krb5_write_message(bsd_context, (krb5_pointer) &rem,
-				     &msg))) {
-    	krb5_free_data_contents(bsd_context, &msg);
-	exit(1);
-    }
-    
-    rcmd_stream_init_krb5(&new_creds->keyblock, encryptflag, 0, 0,
-			  KCMD_OLD_PROTOCOL);
-    
-    /* cleanup */
-    krb5_free_cred_contents(bsd_context, &creds);
-    krb5_free_creds(bsd_context, new_creds);
-    krb5_free_data_contents(bsd_context, &msg);
-
-    return;
-}
-
-
 
 char storage[2*RCP_BUFSIZ];		/* storage for the decryption */
 int nstored = 0;
