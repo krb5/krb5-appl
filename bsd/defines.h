@@ -21,6 +21,8 @@ enum kcmd_proto {
   KCMD_UNKNOWN_PROTOCOL
 };
 
+extern int read_message (int fd, krb5_data *inbuf);
+
 extern int kcmd (int *sock, char **ahost, int /* u_short */ rport,
 		 char *locuser, char *remuser, char *cmd,
 		 int *fd2p, char *service, char *realm,

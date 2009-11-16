@@ -1415,7 +1415,7 @@ recvauth(valid_checksum)
     if ((status = krb5_unparse_name(bsd_context, client, &krusername)))
 	return status;
     
-    if ((status = krb5_read_message(bsd_context, (krb5_pointer)&netf, &inbuf)))
+    if ((status = read_message(netf, &inbuf)))
 	fatal(netf, "Error reading message");
 
     if ((inbuf.length) && /* Forwarding being done, read creds */

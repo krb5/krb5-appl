@@ -73,6 +73,7 @@
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 #ifdef _AIX
 #include <sys/select.h>
 #endif
@@ -167,6 +168,82 @@ restore_sigs (masktype *oldmask)
 #else
     sigsetmask(*oldmask);
 #endif /* POSIX_SIGNALS */
+}
+
+/*
+ * Read len bytes from fd into buf, continuing after partial reads or
+ * interrupts.
+ */
+static ssize_t
+full_read(int fd, void *buf, int len)
+{
+    ssize_t cc, len2 = 0;
+    char *ptr = buf;
+
+    do {
+        cc = read(fd, ptr, len);
+        if (cc < 0) {
+            if (errno == EINTR)
+                continue;
+            return cc;
+        } else if (cc == 0) {
+            return len2;
+        } else {
+            ptr += cc;
+            len2 += cc;
+            len -= cc;
+        }
+    } while (len > 0);
+    return len2;
+}
+
+/* Write outbuf->length in four-byte binary, followed by outbuf->data. */
+static int
+write_message(int fd, krb5_data *outbuf)
+{
+    krb5_int32 len;
+    struct iovec iov[2];
+
+    len = htonl(outbuf->length);
+    iov[0].iov_base = &len;
+    iov[0].iov_len = 4;
+    iov[1].iov_base = outbuf->data;
+    iov[1].iov_len = outbuf->length;
+    if (writev(fd, iov, 2) < 0)
+	return errno;
+    return 0;
+}
+
+/* Read a four-byte length, allocate that much data, and store into inbuf. */
+int
+read_message(int fd, krb5_data *inbuf)
+{
+    krb5_int32 len;
+    int len2, ilen;
+    char *buf = NULL;
+
+    inbuf->data = NULL;
+    inbuf->length = 0;
+
+    if ((len2 = full_read(fd, &len, 4)) != 4)
+        return (len2 < 0) ? errno : ECONNABORTED;
+    len = ntohl(len);
+
+    if ((len & VALID_UINT_BITS) != (krb5_ui_4) len)  /* Overflow size_t??? */
+        return ENOMEM;
+
+    inbuf->length = ilen = (int) len;
+    if (ilen) {
+        if (!(buf = malloc(inbuf->length))) {
+            return ENOMEM;
+        }
+        if ((len2 = full_read(fd, buf, ilen)) != ilen) {
+            free(buf);
+            return (len2 < 0) ? errno : ECONNABORTED;
+        }
+    }
+    inbuf->data = buf;
+    return(0);
 }
 
 static int
@@ -560,13 +637,13 @@ kcmd(sock, ahost, rport, locuser, remuser, cmd, fd2p, service, realm,
 	}
 
 	/* Send forwarded credentials */
-	status = krb5_write_message(bsd_context, (krb5_pointer)&s, &outbuf);
+	status = write_message(s, &outbuf);
 	if (status)
 	  goto bad2;
     }
     else { /* Dummy write to signal no forwarding */
 	outbuf.length = 0;
-	status = krb5_write_message(bsd_context, (krb5_pointer)&s, &outbuf);
+	status = write_message(s, &outbuf);
 	if (status)
 	  goto bad2;
     }
@@ -847,7 +924,7 @@ static int v5_des_read(fd, buf, len, secondary)
     }
 
     while (1) {
-	cc = krb5_net_read(bsd_context, fd, &c, 1);
+	cc = full_read(fd, &c, 1);
 	/* we should check for non-blocking here, but we'd have
 	   to make it save partial reads as well. */
 	if (cc <= 0) return cc; /* read error */
@@ -857,11 +934,11 @@ static int v5_des_read(fd, buf, len, secondary)
     }
 
     rd_len = c;
-    if ((cc = krb5_net_read(bsd_context, fd, &c, 1)) != 1) return 0;
+    if ((cc = full_read(fd, &c, 1)) != 1) return 0;
     rd_len = (rd_len << 8) | c;
-    if ((cc = krb5_net_read(bsd_context, fd, &c, 1)) != 1) return 0;
+    if ((cc = full_read(fd, &c, 1)) != 1) return 0;
     rd_len = (rd_len << 8) | c;
-    if ((cc = krb5_net_read(bsd_context, fd, &c, 1)) != 1) return 0;
+    if ((cc = full_read(fd, &c, 1)) != 1) return 0;
     rd_len = (rd_len << 8) | c;
 
     ret = krb5_c_encrypt_length(bsd_context, keyblock->enctype,
@@ -877,7 +954,7 @@ static int v5_des_read(fd, buf, len, secondary)
 	errno = EIO;
 	return(-1);
     }
-    if ((cc = krb5_net_read(bsd_context, fd, desinbuf.data, net_len)) != net_len) {
+    if ((cc = full_read(fd, desinbuf.data, net_len)) != (ssize_t) net_len) {
 	/* probably out of sync */
 	errno = EIO;
 	return(-1);

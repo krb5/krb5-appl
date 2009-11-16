@@ -1874,8 +1874,7 @@ recvauth(netfd, peersin, valid_checksum)
      * key here, and we do not want krb5_free_ticket() to destroy it. */
     ticket->enc_part2->session = 0;
 
-    if ((status = krb5_read_message(bsd_context, (krb5_pointer)&netfd,
-				    &inbuf))) {
+    if ((status = read_message(netfd, &inbuf))) {
 	error("Error reading message: %s\n", error_message(status));
 	exit(1);
     }
