@@ -68,9 +68,8 @@ depend-dependencies:
 # references in rules for non-library objects in a directory where
 # library objects happen to be built.  It's mostly harmless.
 .depend: .d $(SRCTOP)/depfix.pl
-	x=`$(CC) -print-libgcc-file-name` ; \
 	perl $(SRCTOP)/depfix.pl \
-		'$(SRCTOP)' '$(mydir)' '$(srcdir)' '$(BUILDTOP)' "$$x" '$(STLIBOBJS)' \
+		'$(SRCTOP)' '$(mydir)' '$(srcdir)' '$(BUILDTOP)' '$(STLIBOBJS)' \
 		< .d > .depend
 
 # Temporarily keep the rule for removing the dependency line eater
