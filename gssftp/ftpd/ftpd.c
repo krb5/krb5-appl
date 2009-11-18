@@ -127,7 +127,6 @@ extern int yyparse(void);
 #include <gssapi/gssapi_krb5.h>
 gss_ctx_id_t gcontext;
 gss_buffer_desc client_name;
-static char *gss_services[] = { "ftp", "host", NULL };
 
 #include <krb5.h>
 krb5_context kcontext;
@@ -2153,26 +2152,17 @@ unsigned char *adata;
 #ifdef GSSAPI
 	if (strcmp(temp_auth_type, "GSSAPI") == 0) {
 		int replied = 0;
-		int found = 0;
-		gss_cred_id_t server_creds, deleg_creds;
+		gss_cred_id_t deleg_creds;
 		gss_name_t client;
 		OM_uint32 ret_flags;
 		size_t rad_len;
-		gss_buffer_desc name_buf;
-		gss_name_t server_name;
-		OM_uint32 acquire_maj, acquire_min, accept_maj, accept_min,
-				stat_maj, stat_min;
+		OM_uint32 maj, min;
 		gss_OID mechid;
 		gss_buffer_desc tok, out_tok;
 		unsigned char gbuf[FTP_BUFSIZ];
 		u_char gout_buf[FTP_BUFSIZ];
 		char localname[MAXHOSTNAMELEN];
-		char service_name[MAXHOSTNAMELEN+10];
-		char **gservice;
 		struct hostent *hp;
-		stat_maj = 0;
-		accept_maj = 0;
-		acquire_maj = 0;
 
 		kerror = radix_encode(adata, gout_buf, &length, 1);
 		if (kerror) {
@@ -2198,72 +2188,24 @@ unsigned char *adata;
 		strncpy(localname, hp->h_name, sizeof(localname) - 1);
 		localname[sizeof(localname) - 1] = '\0';
 
-		for (gservice = gss_services; *gservice; gservice++) {
-			snprintf(service_name, sizeof(service_name),
-				 "%s@%s", *gservice, localname);
-			name_buf.value = service_name;
-			name_buf.length = strlen(name_buf.value) + 1;
-			if (debug)
-				syslog(LOG_INFO, "importing <%s>", service_name);
-			stat_maj = gss_import_name(&stat_min, &name_buf, 
-						   gss_nt_service_name,
-						   &server_name);
-			if (stat_maj != GSS_S_COMPLETE) {
-				reply_gss_error(501, stat_maj, stat_min,
-						"importing name");
-				syslog(LOG_ERR, "gssapi error importing name");
-				return 0;
-			}
-			
-			acquire_maj = gss_acquire_cred(&acquire_min, server_name, 0,
-						       GSS_C_NULL_OID_SET, GSS_C_ACCEPT,
-						       &server_creds, NULL, NULL);
-			(void) gss_release_name(&stat_min, &server_name);
+		maj = gss_accept_sec_context(&min,
+					     &gcontext, /* context_handle */
+					     GSS_C_NO_CREDENTIAL, /* verifier_cred_handle */
+					     &tok, /* input_token */
+					     GSS_C_NO_CHANNEL_BINDINGS, /* channel bindings */
+					     &client, /* src_name */
+					     &mechid, /* mech_type */
+					     &out_tok, /* output_token */
+					     &ret_flags,
+					     NULL, 	/* ignore time_rec */
+					     &deleg_creds  /* forwarded credentials */
+					     );
 
-			if (acquire_maj != GSS_S_COMPLETE)
-				continue;
-
-			found++;
-
-			gcontext = GSS_C_NO_CONTEXT;
-
-			accept_maj = gss_accept_sec_context(&accept_min,
-							    &gcontext, /* context_handle */
-							    server_creds, /* verifier_cred_handle */
-							    &tok, /* input_token */
-							    GSS_C_NO_CHANNEL_BINDINGS, /* channel bindings */
-							    &client, /* src_name */
-							    &mechid, /* mech_type */
-							    &out_tok, /* output_token */
-							    &ret_flags,
-							    NULL, 	/* ignore time_rec */
-							    &deleg_creds  /* forwarded credentials */
-							    );
-			if (accept_maj==GSS_S_COMPLETE||accept_maj==GSS_S_CONTINUE_NEEDED)
-				break;
-		}
-
-		if (found) {
-			if (accept_maj!=GSS_S_COMPLETE && accept_maj!=GSS_S_CONTINUE_NEEDED) {
-				reply_gss_error(535, accept_maj, accept_min,
-						"accepting context");
-				syslog(LOG_ERR, "failed accepting context");
-				(void) gss_release_cred(&stat_min, &server_creds);
-				if (ret_flags & GSS_C_DELEG_FLAG)
-					(void) gss_release_cred(&stat_min,
-								&deleg_creds);
-				return 0;
-			}
-		} else {
-			/* Kludge to make sure the right error gets reported, so we don't *
-			 * get those nasty "error: no error" messages.			  */
-			if(stat_maj != GSS_S_COMPLETE)
-			        reply_gss_error(501, stat_maj, stat_min,
-						"acquiring credentials");
-			else
-			        reply_gss_error(501, acquire_maj, acquire_min,
-						"acquiring credentials");
-			syslog(LOG_ERR, "gssapi error acquiring credentials");
+		if (maj != GSS_S_COMPLETE && maj != GSS_S_CONTINUE_NEEDED) {
+			reply_gss_error(535, maj, min, "accepting context");
+			syslog(LOG_ERR, "failed accepting context");
+			if (ret_flags & GSS_C_DELEG_FLAG)
+				(void) gss_release_cred(&min, &deleg_creds);
 			return 0;
 		}
 
@@ -2272,9 +2214,8 @@ unsigned char *adata;
 					       / 4 * 3)) {
 				secure_error("ADAT: reply too long");
 				syslog(LOG_ERR, "ADAT: reply too long");
-				(void) gss_release_cred(&stat_min, &server_creds);
 				if (ret_flags & GSS_C_DELEG_FLAG)
-					(void) gss_release_cred(&stat_min,
+					(void) gss_release_cred(&min,
 								&deleg_creds);
 				return(0);
 			}
@@ -2287,13 +2228,12 @@ unsigned char *adata;
 				secure_error("Couldn't encode ADAT reply (%s)",
 					     radix_error(kerror));
 				syslog(LOG_ERR, "couldn't encode ADAT reply");
-				(void) gss_release_cred(&stat_min, &server_creds);
 				if (ret_flags & GSS_C_DELEG_FLAG)
-					(void) gss_release_cred(&stat_min,
+					(void) gss_release_cred(&min,
 								&deleg_creds);
 				return(0);
 			}
-			if (accept_maj == GSS_S_COMPLETE) {
+			if (maj == GSS_S_COMPLETE) {
 				reply(235, "ADAT=%s", gbuf);
 			} else {
 				/* If the server accepts the security data, and
@@ -2302,35 +2242,33 @@ unsigned char *adata;
 				reply(335, "ADAT=%s", gbuf);
 			}
 			replied = 1;
-			(void) gss_release_buffer(&stat_min, &out_tok);
+			(void) gss_release_buffer(&min, &out_tok);
 		}
-		if (accept_maj == GSS_S_COMPLETE) {
+		if (maj == GSS_S_COMPLETE) {
 			/* GSSAPI authentication succeeded */
-			stat_maj = gss_display_name(&stat_min, client,
-						    &client_name, &mechid);
-			if (stat_maj != GSS_S_COMPLETE) {
+			maj = gss_display_name(&min, client, &client_name,
+					       &mechid);
+			if (maj != GSS_S_COMPLETE) {
 				/* "If the server rejects the security data (if
 				   a checksum fails, for instance), it should 
 				   respond with reply code 535." */
-				reply_gss_error(535, stat_maj, stat_min,
+				reply_gss_error(535, maj, min,
 						"extracting GSSAPI identity name");
-				log_gss_error(LOG_ERR, stat_maj, stat_min,
+				log_gss_error(LOG_ERR, maj, min,
 					      "gssapi error extracting identity");
-				(void) gss_release_cred(&stat_min, &server_creds);
 				if (ret_flags & GSS_C_DELEG_FLAG)
-					(void) gss_release_cred(&stat_min,
+					(void) gss_release_cred(&min,
 								&deleg_creds);
 				return 0;
 			}
 			auth_type = temp_auth_type;
 			temp_auth_type = NULL;
 
-			(void) gss_release_cred(&stat_min, &server_creds);
 			if (ret_flags & GSS_C_DELEG_FLAG) {
 			  if (want_creds)
 			    ftpd_gss_convert_creds(client_name.value,
 						   deleg_creds);
-			  (void) gss_release_cred(&stat_min, &deleg_creds);
+			  (void) gss_release_cred(&min, &deleg_creds);
 			}
 
 			/* If the server accepts the security data, but does
@@ -2346,26 +2284,14 @@ unsigned char *adata;
 			  }
 				
 			return(1);
-		} else if (accept_maj == GSS_S_CONTINUE_NEEDED) {
+		} else {
 			/* If the server accepts the security data, and
 			   requires additional data, it should respond with
 			   reply code 335. */
 			if (!replied)
 			    reply(335, "more data needed");
-			(void) gss_release_cred(&stat_min, &server_creds);
 			if (ret_flags & GSS_C_DELEG_FLAG)
-			  (void) gss_release_cred(&stat_min, &deleg_creds);
-			return(0);
-		} else {
-			/* "If the server rejects the security data (if 
-			   a checksum fails, for instance), it should 
-			   respond with reply code 535." */
-			reply_gss_error(535, stat_maj, stat_min, 
-					"GSSAPI failed processing ADAT");
-			syslog(LOG_ERR, "GSSAPI failed processing ADAT");
-			(void) gss_release_cred(&stat_min, &server_creds);
-			if (ret_flags & GSS_C_DELEG_FLAG)
-			  (void) gss_release_cred(&stat_min, &deleg_creds);
+			  (void) gss_release_cred(&min, &deleg_creds);
 			return(0);
 		}
 	}
