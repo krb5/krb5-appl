@@ -2,20 +2,29 @@
 # Generated makefile dependencies follow.
 #
 $(OUTPRE)dummy.$(OBJEXT): dummy.c
-$(OUTPRE)asprintf.$(OBJEXT): asprintf.c
-$(OUTPRE)daemon.$(OBJEXT): $(BUILDTOP)/autoconf.h daemon.c
-$(OUTPRE)getdtablesize.$(OBJEXT): getdtablesize.c
-$(OUTPRE)getopt.$(OBJEXT): $(BUILDTOP)/autoconf.h getopt.c
-$(OUTPRE)herror.$(OBJEXT): $(BUILDTOP)/autoconf.h herror.c
+$(OUTPRE)asprintf.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/k5-platform.h asprintf.c
+$(OUTPRE)daemon.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  daemon.c
+$(OUTPRE)getdtablesize.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/k5-platform.h getdtablesize.c
+$(OUTPRE)getopt.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  getopt.c
+$(OUTPRE)herror.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  herror.c
 $(OUTPRE)parsetos.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  parsetos.c
-$(OUTPRE)setenv.$(OBJEXT): setenv.c
-$(OUTPRE)setsid.$(OBJEXT): $(BUILDTOP)/autoconf.h setsid.c
+  $(SRCTOP)/k5-platform.h parsetos.c
+$(OUTPRE)setenv.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  setenv.c
+$(OUTPRE)setsid.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  setsid.c
 $(OUTPRE)strcasecmp.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  strcasecmp.c
-$(OUTPRE)strdup.$(OBJEXT): $(BUILDTOP)/autoconf.h strdup.c
+  $(SRCTOP)/k5-platform.h strcasecmp.c
+$(OUTPRE)strdup.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  strdup.c
 $(OUTPRE)strerror.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  strerror.c
+  $(SRCTOP)/k5-platform.h strerror.c
 $(OUTPRE)strftime.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  strftime.c
-$(OUTPRE)strlcpy.$(OBJEXT): strlcpy.c
+  $(SRCTOP)/k5-platform.h strftime.c
+$(OUTPRE)strlcpy.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/k5-platform.h strlcpy.c

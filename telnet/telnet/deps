@@ -13,10 +13,10 @@ $(OUTPRE)commands.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(srcdir)/../libtelnet/enc-proto.h $(srcdir)/../libtelnet/encrypt.h \
   $(srcdir)/../libtelnet/misc-proto.h commands.c defines.h \
   externs.h general.h ring.h types.h
-$(OUTPRE)main.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../libtelnet/auth-proto.h \
-  $(srcdir)/../libtelnet/auth.h $(srcdir)/../libtelnet/enc-proto.h \
-  $(srcdir)/../libtelnet/encrypt.h defines.h externs.h \
-  main.c ring.h
+$(OUTPRE)main.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  $(srcdir)/../libtelnet/auth-proto.h $(srcdir)/../libtelnet/auth.h \
+  $(srcdir)/../libtelnet/enc-proto.h $(srcdir)/../libtelnet/encrypt.h \
+  defines.h externs.h main.c ring.h
 $(OUTPRE)network.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(srcdir)/../arpa/telnet.h defines.h externs.h fdset.h \
   network.c ring.h
