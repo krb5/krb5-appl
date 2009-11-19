@@ -532,7 +532,7 @@ static inline int fai_add_hosts_by_name (const char *name,
 }
 
 static inline void
-fake_freeaddrinfo (struct addrinfo *ai)
+fakeint_freeaddrinfo (struct addrinfo *ai)
 {
     struct addrinfo *next;
     while (ai) {
@@ -547,8 +547,8 @@ fake_freeaddrinfo (struct addrinfo *ai)
 }
 
 static inline int
-fake_getaddrinfo (const char *name, const char *serv,
-		  const struct addrinfo *hint, struct addrinfo **result)
+fakeint_getaddrinfo (const char *name, const char *serv,
+		     const struct addrinfo *hint, struct addrinfo **result)
 {
     struct addrinfo *res = 0;
     int ret;
@@ -636,7 +636,7 @@ fake_getaddrinfo (const char *name, const char *serv,
     }
 
     if (ret && ret != NO_ADDRESS) {
-	fake_freeaddrinfo (res);
+	fakeint_freeaddrinfo (res);
 	return ret;
     }
     if (res == 0)
@@ -647,10 +647,10 @@ fake_getaddrinfo (const char *name, const char *serv,
 
 #ifdef NEED_FAKE_GETNAMEINFO
 static inline int
-fake_getnameinfo (const struct sockaddr *sa, socklen_t len,
-		  char *host, socklen_t hostlen,
-		  char *service, socklen_t servicelen,
-		  int flags)
+fakeint_getnameinfo (const struct sockaddr *sa, socklen_t len,
+		     char *host, socklen_t hostlen,
+		     char *service, socklen_t servicelen,
+		     int flags)
 {
     struct hostent *hp;
     const struct sockaddr_in *sinp;
@@ -795,13 +795,13 @@ static inline
 int getaddrinfo (const char *name, const char *serv,
 		 const struct addrinfo *hint, struct addrinfo **result)
 {
-    return fake_getaddrinfo(name, serv, hint, result);
+    return fakeint_getaddrinfo(name, serv, hint, result);
 }
 
 static inline
 void freeaddrinfo (struct addrinfo *ai)
 {
-    fake_freeaddrinfo(ai);
+    fakeint_freeaddrinfo(ai);
 }
 
 #ifdef NEED_FAKE_GETNAMEINFO
@@ -811,8 +811,8 @@ int getnameinfo (const struct sockaddr *sa, socklen_t len,
 		 char *service, socklen_t servicelen,
 		 int flags)
 {
-    return fake_getnameinfo(sa, len, host, hostlen, service, servicelen,
-			    flags);
+    return fakeint_getnameinfo(sa, len, host, hostlen, service, servicelen,
+			       flags);
 }
 #endif /* NEED_FAKE_GETNAMEINFO */
 #endif /* HAVE_FAKE_GETADDRINFO */
