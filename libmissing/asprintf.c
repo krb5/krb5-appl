@@ -95,7 +95,7 @@ asprintf(char **ret, const char *format, ...)
     int n;
 
     va_start(ap, format);
-    n = krb5int_vasprintf(ret, format, ap);
+    n = vasprintf(ret, format, ap);
     va_end(ap);
     return n;
 }

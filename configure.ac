@@ -109,7 +109,7 @@ AC_CHECK_FUNCS(vhangup vsnprintf waitpid)
 
 # Determine which functions to define in libmissing.
 AC_REPLACE_FUNCS(daemon getdtablesize getopt herror parsetos setenv setsid)
-AC_REPLACE_FUNCS(strcasecmp strdup strerror strftime strlcpy vasprintf)
+AC_REPLACE_FUNCS(strcasecmp strdup strerror strftime strlcpy asprintf)
 
 # Determine libraries for login and ftpd.
 LOGINLIBS=
