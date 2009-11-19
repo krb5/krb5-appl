@@ -3,9 +3,9 @@ BUILDTOP=$(REL)..
 
 LIBOBJS=@LIBOBJS@
 
-OBJS= dummy.o $(LIBOBJS)
+OBJS= fake-addrinfo.o $(LIBOBJS)
 
-SRCS=	$(srcdir)/dummy.c \
+SRCS=	$(srcdir)/fake-addrinfo.c \
 	$(srcdir)/asprintf.c \
 	$(srcdir)/daemon.c \
 	$(srcdir)/getdtablesize.c \

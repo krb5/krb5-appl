@@ -204,30 +204,30 @@ struct addrinfo {
 
 #if defined(KRB5_USE_INET6) && defined(NEED_INSIXADDR_ANY) 
 /* If compiling with IPv6 support and C library does not define in6addr_any */
-extern const struct in6_addr krb5int_in6addr_any;
+extern const struct in6_addr fake_in6addr_any;
 #undef in6addr_any
-#define in6addr_any krb5int_in6addr_any
+#define in6addr_any fake_in6addr_any
 #endif
 
-/* Call out to stuff defined in libkrb5support.  */
-extern int krb5int_getaddrinfo (const char *node, const char *service,
+/* Call out to stuff defined in libmissing.  */
+extern int fake_getaddrinfo (const char *node, const char *service,
 				const struct addrinfo *hints,
 				struct addrinfo **aip);
-extern void krb5int_freeaddrinfo (struct addrinfo *ai);
-extern const char *krb5int_gai_strerror(int err);
-extern int krb5int_getnameinfo (const struct sockaddr *sa, socklen_t salen,
+extern void fake_freeaddrinfo (struct addrinfo *ai);
+extern const char *fake_gai_strerror(int err);
+extern int fake_getnameinfo (const struct sockaddr *sa, socklen_t salen,
 				char *hbuf, size_t hbuflen,
 				char *sbuf, size_t sbuflen,
 				int flags);
 #ifndef IMPLEMENT_FAKE_GETADDRINFO
 #undef	getaddrinfo
-#define getaddrinfo krb5int_getaddrinfo
+#define getaddrinfo fake_getaddrinfo
 #undef  freeaddrinfo
-#define freeaddrinfo krb5int_freeaddrinfo
+#define freeaddrinfo fake_freeaddrinfo
 #undef  gai_strerror
-#define gai_strerror krb5int_gai_strerror
+#define gai_strerror fake_gai_strerror
 #undef  getnameinfo
-#define getnameinfo krb5int_getnameinfo
+#define getnameinfo fake_getnameinfo
 #endif
 
 #endif /* FAI_DEFINED */
