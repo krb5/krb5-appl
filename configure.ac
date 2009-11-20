@@ -73,8 +73,8 @@ AC_CHECK_HEADERS(curses.h lastlog.h libutil.h memory.h paths.h pty.h stdlib.h)
 AC_CHECK_HEADERS(string.h ttyent.h util.h sac.h unistd.h utmp.h utmpx.h)
 AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h)
 AC_CHECK_HEADERS(sys/filio.h sys/ioctl_compat.h sys/label.h sys/param.h)
-AC_CHECK_HEADERS(sys/select.h sys/sockio.h sys/stream.h sys/time.h sys/tty.h)
-AC_CHECK_HEADERS(sys/uio.h sys/utsname.h sys/wait.h)
+AC_CHECK_HEADERS(sys/ptyvar.h sys/select.h sys/sockio.h sys/stream.h)
+AC_CHECK_HEADERS(sys/time.h sys/tty.h sys/uio.h sys/utsname.h sys/wait.h)
 # On some systems, term.h requires curses.h inclusion
 AC_CHECK_HEADERS(term.h,,,
 [#ifdef HAVE_CURSES_H
@@ -90,14 +90,6 @@ case $krb5_cv_host in
     fi
     ;;
 esac
-
-AC_CHECK_HEADER(sys/ptyvar.h, [], [],
-[#if HAVE_SYS_STREAM_H
-#include <sys/stream.h>
-#endif
-#if HAVE_SYS_TTY_H
-#include <sys/tty.h>
-#endif])
 
 AC_CHECK_FUNCS(_getpty cgetent getcwd getenv gettosbyname getusershell getutmp)
 AC_CHECK_FUNCS(getutmpx grantpt inet_aton initgroups isatty killpg killpg)
