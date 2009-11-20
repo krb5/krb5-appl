@@ -123,6 +123,9 @@ int gettimeofday(struct timeval *tv, void *tz);
 #ifndef L_INCR
 #define L_INCR 1
 #endif
+#ifndef INADDR_NONE
+#define INADDR_NONE 0xffffffff
+#endif
 
 #include <k5-platform.h>
 
