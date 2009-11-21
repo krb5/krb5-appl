@@ -361,7 +361,7 @@ AC_MSG_RESULT($krb5_cv_shadow_pwd)
 if test $krb5_cv_shadow_pwd = yes; then
 AC_DEFINE(HAVE_SHADOW,1,[Define if shadow password interface is available])
 fi
-K5_AC_CHECK_FILES(/etc/environment /etc/TIMEZONE)
+AC_CHECK_FILES(/etc/environment /etc/TIMEZONE)
 
 # bsd and libpty check POSIX_TERMIOS; telnet checks USE_TERMIO.
 AC_CHECK_HEADER(termios.h,

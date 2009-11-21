@@ -225,50 +225,6 @@ if test $krb5_cv_inet6 = yes || test "$krb5_cv_inet6_with_dinet6" = yes; then
 fi
 ])dnl
 dnl
-dnl Generic File existence tests
-dnl 
-dnl K5_AC_CHECK_FILE(FILE, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
-dnl
-AC_DEFUN(K5_AC_CHECK_FILE,
-[AC_REQUIRE([AC_PROG_CC])dnl
-dnl Do the transliteration at runtime so arg 1 can be a shell variable.
-ac_safe=`echo "$1" | sed 'y%./+-%__p_%'`
-AC_MSG_CHECKING([for $1])
-AC_CACHE_VAL(ac_cv_file_$ac_safe,
-[if test "$cross_compiling" = yes; then
-  errprint(__file__:__line__: warning: Cannot check for file existence when cross compiling
-)dnl
-  AC_MSG_ERROR(Cannot check for file existence when cross compiling)
-else
-  if test -r $1; then
-    eval "ac_cv_file_$ac_safe=yes"
-  else
-    eval "ac_cv_file_$ac_safe=no"
-  fi
-fi])dnl
-if eval "test \"`echo '$ac_cv_file_'$ac_safe`\" = yes"; then
-  AC_MSG_RESULT(yes)
-  ifelse([$2], , :, [$2])
-else
-  AC_MSG_RESULT(no)
-ifelse([$3], , , [$3
-np])dnl
-fi
-])dnl
-dnl
-dnl K5_AC_CHECK_FILES(FILE... [, ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
-dnl
-AC_DEFUN(K5_AC_CHECK_FILES,
-[AC_REQUIRE([AC_PROG_CC])dnl
-for ac_file in $1
-do
-K5_AC_CHECK_FILE($ac_file,
-[changequote(, )dnl
-  ac_tr_file=HAVE`echo $ac_file | sed 'y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%'`
-changequote([, ])dnl
-  AC_DEFINE_UNQUOTED($ac_tr_file) $2], $3)dnl
-done
-])dnl
 AC_DEFUN(KRB5_AC_CHECK_FOR_CFLAGS,[
 AC_BEFORE([$0],[AC_PROG_CC])
 krb5_ac_cflags_set=${CFLAGS+set}

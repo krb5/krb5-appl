@@ -654,7 +654,7 @@ afs_cleanup ()
     exit(1); \
 }
 
-#if defined(HAVE_ETC_ENVIRONMENT) || defined(HAVE_ETC_TIMEZONE)
+#if defined(HAVE__ETC_ENVIRONMENT) || defined(HAVE__ETC_TIMEZONE)
 static void
 read_env_vars_from_file (filename)
     char *filename;
@@ -1308,12 +1308,12 @@ int main(argc, argv)
     setenv ("LOGIN", pwd->pw_name, 1);
 
     /* read the /etc/environment file on AIX */
-#ifdef HAVE_ETC_ENVIRONMENT
+#ifdef HAVE__ETC_ENVIRONMENT
     read_env_vars_from_file ("/etc/environment");
 #endif
 
     /* Set login timezone for date information (sgi PDG) */
-#ifdef HAVE_ETC_TIMEZONE
+#ifdef HAVE__ETC_TIMEZONE
     read_env_vars_from_file ("/etc/TIMEZONE");
 #else
     if (tz)
