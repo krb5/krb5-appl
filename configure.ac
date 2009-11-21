@@ -50,6 +50,10 @@ AC_CHECK_TYPES([socklen_t, struct sockaddr_storage],,,
 #include <sys/socket.h>
 ])
 
+AC_PATH_PROG(UCB_RLOGIN,rlogin,/usr/ucb/rlogin)
+AC_PATH_PROG(UCB_RSH,rsh,/usr/ucb/rsh)
+AC_PATH_PROG(UCB_RCP,rcp,/usr/ucb/rcp)
+
 # Enables system protoypes for extended functions (such as asprintf)
 # on most Linux systems.
 AC_DEFINE(_GNU_SOURCE, 1, [Enable extended glibc prototypes])
