@@ -72,7 +72,6 @@ CHECK_DIRENT
 CHECK_SETJMP
 CHECK_SIGNALS
 CHECK_SIGPROCMASK
-CHECK_UTMP
 CHECK_WAIT_TYPE
 DECLARE_SYS_ERRLIST
 KRB5_AC_MAINTAINER_MODE
@@ -214,33 +213,13 @@ fi
 
 # ----- utmp stuff -----
 
-AC_DEFUN(K5_CHECK_UT_MEMBER,
-[AC_MSG_CHECKING([for $2 in struct $1])
-AC_CACHE_VAL([krb5_cv_struct_$1_$2],
-[AC_TRY_COMPILE([#include <sys/types.h>
-#include <$1.h>], [struct $1 u; u.$2;],
-eval "krb5_cv_struct_$1_$2=yes", eval "krb5_cv_struct_$1_$2=no")])
-if eval "test \"`echo '$krb5_cv_struct_'$1'_'$2`\" = yes"; then
-  AC_MSG_RESULT(yes)
-  krb5_tr_ut=HAVE_STRUCT_`echo $1'_'$2 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
-  AC_DEFINE_UNQUOTED($krb5_tr_ut,1,[Define if $2 field present in $1])
-else
-  AC_MSG_RESULT(no)
-fi])
+AC_CHECK_MEMBERS([struct utmp.ut_host, struct utmp.ut_syslen, struct utmp.ut_addr, struct utmp.ut_id, struct utmp.ut_pid, struct utmp.ut_type, struct utmp.ut_exit],,,
+[#include <sys/types.h>
+#include <utmp.h>])
 
-if test "$ac_cv_header_utmp_h" = yes; then
-  AC_MSG_RESULT(checking struct utmp members)
-  for krb5_mem in ut_host ut_syslen ut_addr ut_id ut_pid ut_type ut_exit; do
-    K5_CHECK_UT_MEMBER(utmp, $krb5_mem)
-  done
-fi
-
-if test "$ac_cv_header_utmpx_h" = yes; then
-  AC_MSG_RESULT(checking struct utmpx members)
-  for krb5_mem in ut_host ut_syslen ut_addr ut_id ut_pid ut_type ut_exit; do
-    K5_CHECK_UT_MEMBER(utmpx, $krb5_mem)
-  done
-fi
+AC_CHECK_MEMBERS([struct utmpx.ut_host, struct utmpx.ut_syslen, struct utmpx.ut_addr, struct utmpx.ut_id, struct utmpx.ut_pid, struct utmpx.ut_type, struct utmpx.ut_exit],,,
+[#include <sys/types.h>
+#include <utmpx.h>])
 
 AC_DEFUN(K5_CHECK_UT_EXIT_MEMBER,
 [AC_MSG_CHECKING([for ut_exit.$2 in struct $1])
@@ -257,7 +236,7 @@ else
   ifelse([$4], , :, [$4])
 fi])
 
-if test "$krb5_cv_struct_utmp_ut_exit" = yes; then
+if test "$ac_cv_member_struct_utmp_ut_exit" = yes; then
   AC_MSG_RESULT(checking for working ut_exit.e_exit in struct utmp)
   for krb5_mem in __e_exit ut_e_exit ut_exit e_exit; do
     K5_CHECK_UT_EXIT_MEMBER(utmp, $krb5_mem,
@@ -273,7 +252,7 @@ krb5_utmp_e_termination=`echo $krb5_mem|sed -e 's%_exit$%_termination%'`], )
   fi
 fi
 
-if test "$krb5_cv_struct_utmpx_ut_exit" = yes; then
+if test "$ac_cv_member_struct_utmpx_ut_exit" = yes; then
   AC_MSG_RESULT(checking for working ut_exit.e_exit in struct utmpx)
   for krb5_mem in __e_exit ut_e_exit ut_exit e_exit; do
     K5_CHECK_UT_EXIT_MEMBER(utmpx, $krb5_mem,
@@ -292,9 +271,9 @@ fi
 if test "$ac_cv_header_utmpx_h" = yes; then
   AC_MSG_CHECKING(consistency of utmpx API)
   if test "$ac_cv_func_setutxent" = yes; then
-    if test "$krb5_cv_struct_utmpx_ut_id" = yes \
-      && test "$krb5_cv_struct_utmpx_ut_type" = yes \
-      && test "$krb5_cv_struct_utmpx_ut_pid" = yes; then
+    if test "$ac_cv_member_struct_utmpx_ut_id" = yes \
+      && test "$ac_cv_member_struct_utmpx_ut_type" = yes \
+      && test "$ac_cv_member_struct_utmpx_ut_pid" = yes; then
       AC_MSG_RESULT(ok)
     else
       AC_MSG_RESULT(not ok)
@@ -310,9 +289,9 @@ if test "$ac_cv_func_setutent" = yes && \
   test "$ac_cv_header_utmpx_h" = no; then
   AC_MSG_CHECKING(consistency of sysV-ish utmp API)
   if test "$ac_cv_header_utmp_h" = yes; then
-    if test "$krb5_cv_struct_utmp_ut_id" = yes \
-      && test "$krb5_cv_struct_utmp_ut_type" = yes \
-      && test "$krb5_cv_struct_utmp_ut_pid" = yes; then
+    if test "$ac_cv_member_struct_utmp_ut_id" = yes \
+      && test "$ac_cv_member_struct_utmp_ut_type" = yes \
+      && test "$ac_cv_member_struct_utmp_ut_pid" = yes; then
       AC_MSG_RESULT(ok)
     else
       AC_MSG_RESULT(not ok)

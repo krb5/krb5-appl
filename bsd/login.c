@@ -217,7 +217,7 @@ typedef sigtype (*handler)();
 #define QUOTAWARN	"/usr/ucb/quota" /* warn user about quotas */
 #endif
 
-#ifndef NO_UT_HOST
+#ifdef HAVE_STRUCT_UTMP_UT_HOST
 #ifndef UT_HOSTSIZE
 /* linux defines it directly in <utmp.h> */
 #define	UT_HOSTSIZE	sizeof(((struct utmp *)0)->ut_host)

@@ -761,7 +761,7 @@ void doit(f, fromp)
 #endif /* LOG_REMOTE_REALM || LOG_OTHER_USERS || LOG_ALL_LOGINS */
 #endif /* KERBEROS */
 
-#ifndef NO_UT_PID
+#ifdef HAVE_STRUCT_UTMP_UT_PID
 	{
 
 	    pty_update_utmp(PTY_LOGIN_PROCESS, getpid(), "rlogin", line,

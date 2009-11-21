@@ -81,7 +81,7 @@ void ftp_logwtmp(line, name, host)
 	if (fstat(fd, &buf) == 0) {
 		(void)strncpy(ut.ut_line, line, sizeof(ut.ut_line));
 		(void)strncpy(ut.ut_name, name, sizeof(ut.ut_name));
-#ifndef NO_UT_HOST
+#ifdef HAVE_STRUCT_UTMP_UT_HOST
 		(void)strncpy(ut.ut_host, host, sizeof(ut.ut_host));
 #endif
 		(void)time(&ut.ut_time);

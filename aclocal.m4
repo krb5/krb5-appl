@@ -387,31 +387,6 @@ AC_CHECK_MEMBER(struct sockaddr.sa_len,
 ,,[#include <sys/types.h>
 #include <sys/socket.h>])])
 dnl
-dnl
-dnl CHECK_UTMP: check utmp structure and functions
-dnl
-AC_DEFUN(CHECK_UTMP,[
-AC_CHECK_MEMBERS([struct utmp.ut_pid, struct utmp.ut_type, struct utmp.ut_host, struct utmp.ut_exit],,,
-[#include <sys/types.h>
-#include <utmp.h>])
-
-# Define the names actually used in the krb5 code currently:
-if test $ac_cv_member_struct_utmp_ut_pid = no; then
-  AC_DEFINE(NO_UT_PID,1,[Define if ut_pid field not found])
-fi
-if test $ac_cv_member_struct_utmp_ut_type = no; then
-  AC_DEFINE(NO_UT_TYPE,1,[Define if ut_type field not found])
-fi
-if test $ac_cv_member_struct_utmp_ut_host = no; then
-  AC_DEFINE(NO_UT_HOST,1,[Define if ut_host field not found])
-fi
-if test $ac_cv_member_struct_utmp_ut_exit = no; then
-  AC_DEFINE(NO_UT_EXIT,1,[Define if ut_exit field not found])
-fi
-
-AC_CHECK_FUNCS(setutent setutxent updwtmp updwtmpx)
-])dnl
-dnl
 dnl Check if stdarg or varargs is available *and compiles*; prefer stdarg.
 dnl (This was sent to djm for incorporation into autoconf 3/12/1996.  KR)
 dnl
