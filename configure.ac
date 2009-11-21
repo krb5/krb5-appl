@@ -54,6 +54,14 @@ AC_CHECK_TYPES([socklen_t, struct sockaddr_storage],,,
 # on most Linux systems.
 AC_DEFINE(_GNU_SOURCE, 1, [Enable extended glibc prototypes])
 
+# We could rely on krb5-config to provide this, except that some of
+# the later tests (particularly those in KRB5_AC_INET6) rely on
+# -lsocket -lnsl being in LIBS on platforms which need them.  This is
+# a very simplified test, aimed mainly at Solaris, and may break on
+# some older or more obscure operating systems.
+AC_CHECK_FUNC(socket, [],
+  [AC_CHECK_LIB(socket, socket, LIBS="-lsocket -lnsl $LIBS", [], -lnsl)])
+
 AC_HEADER_STDARG
 AC_HEADER_TIME
 CHECK_DIRENT
