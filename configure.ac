@@ -29,6 +29,7 @@ AC_SUBST(GSS_LIBS)
 AC_SUBST(KRB5_BINDIR)
 AC_SUBST(KRB5_SBINDIR)
 
+AC_CANONICAL_HOST
 WITH_CC
 if test -z "$LD" ; then LD=$CC; fi
 AC_ARG_VAR(LD,[linker command [CC]])
@@ -93,7 +94,7 @@ AC_CHECK_HEADERS(term.h,,,
 #endif
 ])
 
-case $krb5_cv_host in
+case $host in
 *-*-solaris*)
     if test "$ac_cv_c_compiler_gnu" = yes; then
         # Solaris 8 at least has curses.h that is noisy under gcc
@@ -163,7 +164,7 @@ LIBS="$old_LIBS"
 # module in init_slave.c and AC_DEFINES for the operating systems that
 # need the modules.  Each OS that supports streams has a different
 # idea of what you want to push.
-case $krb5_cv_host in
+case $host in
 *-*-ultrix*)
     echo "Disabling initial vhangup and setsid because they break under Ultrix"
     AC_DEFINE([OPEN_CTTY_ONLY_ONCE],[1],
