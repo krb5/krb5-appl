@@ -1,7 +1,9 @@
 # 
 # Generated makefile dependencies follow.
 #
-$(OUTPRE)dummy.$(OBJEXT): dummy.c
+$(OUTPRE)fake-addrinfo.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/fake-addrinfo.h $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h \
+  $(SRCTOP)/socket-utils.h fake-addrinfo.c
 $(OUTPRE)asprintf.$(OBJEXT): $(BUILDTOP)/autoconf.h \
   $(SRCTOP)/k5-platform.h asprintf.c
 $(OUTPRE)daemon.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
