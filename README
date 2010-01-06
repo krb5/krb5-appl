@@ -1,4 +1,4 @@
-             Kerberos Version 5 Applications, Release 0.9
+             Kerberos Version 5 Applications, Release 1.0
 
                             Release Notes
                         The MIT Kerberos Team
@@ -19,25 +19,6 @@ many environments by OpenSSH, but there is still some interest in
 their continued maintenance.  These programs were included in the main
 Kerberos 5 distribution through release 1.7, but are now packaged
 separately.
-
-Unpacking the Source Distribution
----------------------------------
-
-The source distribution of Kerberos 5 comes in a gzipped tarfile,
-krb5-appl-0.9.tar.gz.  Instructions on how to extract the entire
-distribution follow.
-
-If you have the GNU tar program and gzip installed, you can simply do:
-
-    gtar zxpf krb5-appl-0.9.tar.gz
-
-If you don't have GNU tar, you will need to get the FSF gzip
-distribution and use gzcat:
-
-    gzcat krb5-appl-0.9.tar.gz | tar xpf -
-
-Both of these methods will extract the sources into krb5-appl-0.9/src
-and the documentation into krb5-appl-0.9/doc.
 
 Building and Installing
 -----------------------
