@@ -1824,7 +1824,7 @@ static void quote1(initial, argc, argv)
 			len += strlen(strncpy(&buf[len], argv[i], sizeof(buf) - 1 - len));
 		}
 	}
-	if (command(buf) == PRELIM) {
+	if (command("%s", buf) == PRELIM) {
 		while (getreply(0) == PRELIM);
 	}
 }

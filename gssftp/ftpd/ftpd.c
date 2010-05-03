@@ -2360,7 +2360,7 @@ send_file_list(whichfiles)
 		globerr = NULL;
 		dirlist = ftpglob(whichfiles);
 		if (globerr != NULL) {
-			reply(550, globerr);
+			reply(550, "%s", globerr);
 			return;
 		} else if (dirlist == NULL) {
 			errno = ENOENT;
@@ -2536,7 +2536,7 @@ static void
 log_gss_error(int severity, OM_uint32 maj_stat, OM_uint32 min_stat,
 	      const char *s)
 {
-    syslog(severity, s);
+    syslog(severity, "%s", s);
     with_gss_error_text(log_gss_error_1, maj_stat, min_stat, severity);
 }
 
