@@ -498,23 +498,28 @@ kerberos5_is(ap, data, cnt)
 		if (authenticator->checksum) {
 		    char type_check[2];
 		    krb5_checksum *cksum = authenticator->checksum;
-		    krb5_keyblock *key;
+		    krb5_key key;
+		    krb5_boolean valid;
+		    krb5_data d;
 
 		    type_check[0] = ap->type;
 		    type_check[1] = ap->way;
 
-		    r = krb5_auth_con_getkey(telnet_context, auth_context,
-					     &key);
+		    r = krb5_auth_con_getkey_k(telnet_context, auth_context,
+					       &key);
 		    if (r) {
 			(void) snprintf(errbuf, sizeof(errbuf),
 					"krb5_auth_con_getkey failed: %s",
 					error_message(r));
 			goto errout;
 		    }
-		    r = krb5_verify_checksum(telnet_context,
-					     cksum->checksum_type, cksum,
-					     &type_check, 2, key->contents,
-					     key->length);
+
+		    d.magic = KV5M_DATA;
+		    d.data = type_check;
+		    d.length = 2;
+		    r = krb5_k_verify_checksum(telnet_context, key, 
+					       cksum->checksum_type,
+					       &d, cksum, &valid);
 		/*
 		 * Note that krb5_verify_checksum() will fail if a pre-
 		 * MIT Kerberos Beta 5 client is attempting to connect
@@ -524,13 +529,12 @@ kerberos5_is(ap, data, cnt)
 		 * checksums (like in klogind). Such an option is not
 		 * present at this time.
 		 */
-		    if (r) {
+		    if (r != 0 || !valid) {
 			(void) snprintf(errbuf, sizeof(errbuf),
-					"checksum verification failed: %s",
-					error_message(r));
+					"checksum verification failed");
 			goto errout;
 		    }
-		    krb5_free_keyblock(telnet_context, key);
+		    krb5_k_free_key(telnet_context, key);
 		}
 		krb5_free_authenticator(telnet_context, authenticator);
 		if ((ap->way & AUTH_HOW_MASK) == AUTH_HOW_MUTUAL) {
