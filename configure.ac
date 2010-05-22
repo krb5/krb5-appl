@@ -105,11 +105,17 @@ esac
 
 AC_CHECK_FUNCS(_getpty cgetent getcwd getenv gettosbyname getusershell getutmp)
 AC_CHECK_FUNCS(getutmpx grantpt inet_aton initgroups isatty killpg killpg)
-AC_CHECK_FUNCS(line_push logwtmp openpty ptsname revoke rmufile rresvport_af)
+AC_CHECK_FUNCS(line_push ptsname revoke rmufile rresvport_af)
 AC_CHECK_FUNCS(seteuid setlogin setpgid setpriority setresuid setreuid)
 AC_CHECK_FUNCS(setutent setutsent setutxent strsave tcgetpgrp tcsetpgrp)
 AC_CHECK_FUNCS(ttyname unsetenv updwtmp updwtmpx utimes utmpname utmpxname)
 AC_CHECK_FUNCS(vhangup vsnprintf waitpid)
+
+# Check for functions found in libutil.
+old_LIBS="$LIBS"
+LIBS="$UTIL_LIB $LIBS"
+AC_CHECK_FUNCS(logwtmp openpty)
+LIBS="$old_LIBS"
 
 # Determine which functions to define in libmissing.
 AC_REPLACE_FUNCS(daemon getdtablesize getopt herror parsetos setenv setsid)
