@@ -152,6 +152,14 @@ int have_creds;		/* User has credentials on disk */
 #include "ftpd_var.h"
 #include "secure.h"
 
+#ifndef MAXPATHLEN
+# define MAXPATHLEN 4096
+#endif
+
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 256
+#endif
+
 extern	char *crypt();
 extern	char version[];
 extern	char *home;		/* pointer to home directory for glob */

@@ -488,6 +488,11 @@ int maxlogs;
 #define NCARGS 1024
 #endif
 
+#if NCARGS == INT_MAX
+#undef NCARGS
+#define NCARGS 4096
+#endif
+
 #define NMAX   16 
 
 int pid;

@@ -38,6 +38,7 @@
  */
 #include <sys/types.h>
 #include <sys/param.h>
+#include <sys/ioctl.h>
 
 #ifndef	BSD
 # define	BSD 43

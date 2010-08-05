@@ -122,6 +122,14 @@ int login_accept_passwd = 0;
 #define siglongjmp	longjmp
 #endif
 
+#ifndef MAXPATHLEN
+# define MAXPATHLEN 4096
+#endif
+
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 256
+#endif
+
 #ifdef POSIX_SIGNALS
 typedef struct sigaction handler;
 #define handler_init(H,F)		(sigemptyset(&(H).sa_mask), \
