@@ -27,7 +27,7 @@ server is invoked by \fIinetd(8)\fP when it receives a connection on
 the port indicated in /etc/inetd.conf.  A typical /etc/inetd.conf
 configuration line for \fIklogind\fP might be:
 
-klogin stream tcp nowait root /usr/cygnus/sbin/klogind klogind -e5c
+klogin stream tcp nowait root /usr/local/sbin/klogind klogind \-e5c
 
 When a service request is received, the following protocol is initiated:
 
@@ -56,7 +56,7 @@ by command line arguments passed by inetd.  The options are:
 
 .IP \fB\-P\fP
 Prompt the user for a password.
-If the -P option is passed, then the password is verified in addition
+If the \-P option is passed, then the password is verified in addition
 to all other checks.
 
 .IP \fB\-e\fP
@@ -87,8 +87,8 @@ Ignore authenticator checksums if provided.  This option
 ignore authenticator checksusm presented by current Kerberos clients
 to protect initial connection information; it is the opposite of
 \fB-c\fP.  This option is provided because some older
-clients--particularly clients predating the release of Kerberos V5
-Beta5 (May 1995)--present bogus checksums that prevent Kerberos
+clients -- particularly clients predating the release of Kerberos V5
+Beta5 (May 1995) -- present bogus checksums that prevent Kerberos
 authentication from succeeding in the default mode.
 
 .PP
