@@ -322,10 +322,14 @@ main(argc, argv)
 
 		if (setjmp(toplevel) != 0)
 			Exit(0);
-		if (tn(argp - args, args) == 1)
-			return (0);
-		else
-			return (1);
+		{
+			int ret = tn(argp - args, args);
+			switch (ret) {
+				case 1: return 0;
+				case 2: usage();
+				default: return 1;
+			}
+		}
 	}
 	(void)setjmp(toplevel);
 	for (;;) {
