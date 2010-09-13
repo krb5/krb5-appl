@@ -171,6 +171,13 @@ char copyright[] =
 
 
 
+#ifdef HAVE_UTMP_H
+#include <utmp.h>
+#endif
+
+#ifndef UT_NAMESIZE	/* linux defines it directly in <utmp.h> */
+#define	UT_NAMESIZE	sizeof(((struct utmp *)0)->ut_name)
+#endif
 
 #define MAXRETRIES 4
 
@@ -438,7 +445,7 @@ char    username[32] = "LOGNAME=";
 #include <tmpdir.h>
 char tmpdir[64] = "TMPDIR=";
 #else
-char	username[20] = "USER=";
+char	username[UT_NAMESIZE + 6] = "USER=";
 #endif
 
 char	homedir[64] = "HOME=";
@@ -493,7 +500,7 @@ int maxlogs;
 #define NCARGS 4096
 #endif
 
-#define NMAX   16 
+#define NMAX   UT_NAMESIZE
 
 int pid;
 char locuser[NMAX+1];
