@@ -805,7 +805,7 @@ checkuser(name)
 			if (strcmp(line, name) == 0)
 			     return (1);
 			if (strncmp(line, name, strlen(name)) == 0) {
-			     int i = strlen(name) + 1;
+			     int i = strlen(name);
 			     
 			     /* Make sure foo doesn't match foobar */
 			     if (line[i] == '\0' || !isspace((int) line[i]))
