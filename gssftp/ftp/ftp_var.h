@@ -70,6 +70,10 @@ typedef sigtype (*sig_t)();
 #define extern
 #endif
 
+#ifndef MAXPATHLEN
+# define MAXPATHLEN 4096
+#endif
+
 /*
  * Options and other state info.
  */

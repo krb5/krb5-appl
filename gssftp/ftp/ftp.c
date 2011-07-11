@@ -150,6 +150,10 @@ unsigned char *ucbuf;
 #include "ftp_var.h"
 #include "secure.h"
 
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 256
+#endif
+
 #ifdef GSSAPI
 void user_gss_error (OM_uint32, OM_uint32, char *);
 #endif

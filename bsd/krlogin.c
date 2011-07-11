@@ -139,6 +139,7 @@ char copyright[] =
 #include <sys/ptyvar.h>
 #endif
 #endif
+#undef TIOCGLTC
 
 #ifndef TIOCPKT_NOSTOP
 /* These values are over-the-wire protocol, *not* local values */

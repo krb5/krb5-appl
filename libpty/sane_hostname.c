@@ -27,6 +27,10 @@
 #include "socket-utils.h"
 #include "fake-addrinfo.h"
 
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 256
+#endif
+
 static void
 downcase (char *s)
 {

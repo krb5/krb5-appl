@@ -286,6 +286,10 @@ char *login_program = LOGIN_PROGRAM;
 #define MAXDNAME 256 /*per the rfc*/
 #endif
 
+#ifndef MAXPATHLEN
+# define MAXPATHLEN 4096
+#endif
+
 char		lusername[UT_NAMESIZE+1];
 char		rusername[UT_NAMESIZE+1];
 char            *krusername = 0;
