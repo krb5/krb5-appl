@@ -103,13 +103,13 @@ case $host in
     ;;
 esac
 
-AC_CHECK_FUNCS(_getpty cgetent getcwd getenv gettosbyname getusershell getutmp)
-AC_CHECK_FUNCS(getutmpx grantpt inet_aton initgroups isatty killpg killpg)
-AC_CHECK_FUNCS(line_push ptsname revoke rmufile rresvport_af)
-AC_CHECK_FUNCS(seteuid setlogin setpgid setpriority setresuid setreuid)
-AC_CHECK_FUNCS(setutent setutsent setutxent strsave tcgetpgrp tcsetpgrp)
-AC_CHECK_FUNCS(ttyname unsetenv updwtmp updwtmpx utimes utmpname utmpxname)
-AC_CHECK_FUNCS(vhangup vsnprintf waitpid)
+AC_CHECK_FUNCS(_getpty cgetent getcwd getenv gethostbyname_r getservbyname_r)
+AC_CHECK_FUNCS(gettosbyname getusershell getutmp getutmpx grantpt inet_aton)
+AC_CHECK_FUNCS(initgroups isatty killpg killpg line_push ptsname revoke)
+AC_CHECK_FUNCS(rmufile rresvport_af seteuid setlogin setpgid setpriority)
+AC_CHECK_FUNCS(setresuid setreuid setutent setutsent setutxent strsave)
+AC_CHECK_FUNCS(tcgetpgrp tcsetpgrp ttyname unsetenv updwtmp updwtmpx utimes)
+AC_CHECK_FUNCS(utmpname utmpxname vasprintf vhangup waitpid)
 
 # Check for functions found in libutil.
 old_LIBS="$LIBS"
