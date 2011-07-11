@@ -994,8 +994,14 @@ login(passwd, logincode)
 #endif
 	}
 
-	(void) krb5_setegid((gid_t)pw->pw_gid);
-	(void) initgroups(pw->pw_name, pw->pw_gid);
+	if (setgid((gid_t)pw->pw_gid) < 0) {
+		reply(550, "Can't set gid.");
+		goto bad;
+	}
+	if (geteuid() == 0 && initgroups(pw->pw_name, pw->pw_gid) < 0) {
+		reply(550, "Can't initialize groups.");
+		goto bad;
+	}
 
 	/* open wtmp before chroot */
 	(void) snprintf(ttyline, sizeof(ttyline), "ftp%ld", (long) getpid());
