@@ -43,15 +43,7 @@
 
 #include "autoconf.h"
 #include <stdio.h>
-
-#if STDC_HEADERS
 #include <string.h>
-#else
-#ifndef HAVE_STRCHR
-#define strchr index
-#endif
-char *strchr();
-#endif
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
