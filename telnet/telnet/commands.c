@@ -2467,8 +2467,7 @@ tn(argc, argv)
 	    continue;
 	}
     usage:
-	printf("usage: %s [-l user] [-a] host-name [port]\r\n", cmd);
-	return 0;
+	return 2;
     }
     if (hostp == 0)
 	goto usage;
