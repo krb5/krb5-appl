@@ -1,3 +1,0 @@
-mydir=telnet
-BUILDTOP=$(REL)..
-SUBDIRS=libtelnet telnet telnetd

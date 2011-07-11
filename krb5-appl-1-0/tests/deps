@@ -1,5 +1,0 @@
-# 
-# Generated makefile dependencies follow.
-#
-$(OUTPRE)t_inetd.$(OBJEXT): $(BUILDTOP)/autoconf.h \
-  t_inetd.c

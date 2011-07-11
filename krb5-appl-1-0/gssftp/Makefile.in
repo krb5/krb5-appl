@@ -1,3 +1,0 @@
-mydir=gssftp
-BUILDTOP=$(REL)..
-SUBDIRS=ftp ftpd
