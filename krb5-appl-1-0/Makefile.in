@@ -1,0 +1,4 @@
+mydir=.
+BUILDTOP=$(REL)$(C)
+
+SUBDIRS= libmissing libpty bsd gssftp telnet tests

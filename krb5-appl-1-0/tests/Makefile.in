@@ -1,0 +1,37 @@
+mydir=tests
+BUILDTOP=$(REL)..
+SUBDIRS = resolve
+
+RUNTEST = @RUNTEST@ $(DEJAFLAGS)
+RUNTESTFLAGS =
+
+SRCS=$(srcdir)/t_inetd.c
+OBJS=t_inetd.o
+
+KRB5_BINDIR = @KRB5_BINDIR@
+KRB5_SBINDIR = @KRB5_SBINDIR@
+
+all install::
+
+check:: check-runtest-@HAVE_RUNTEST@
+
+check-runtest-no::
+	@echo "+++"
+	@echo "+++ WARNING: tests/dejagnu tests not run."
+	@echo "+++ runtest is unavailable."
+	@echo "+++"
+
+# Set VALGRIND at run time, that may be changed when running 'make'.
+check-runtest-yes:: t_inetd site.exp
+	$(RUNTEST) --tool krb VALGRIND="$(VALGRIND)" $(RUNTESTFLAGS)
+
+# KRB5_BASE_LIBS is a cheap way to get network libraries here.
+t_inetd:: t_inetd.o
+	$(CC_LINK) -o t_inetd t_inetd.o $(KRB5_BASE_LIBS)
+
+clean::
+	$(RM) -r t_inetd tmpdir dbg.log krb.log krb.sum
+
+site.exp: Makefile
+	echo "set KRB5_BINDIR {$(KRB5_BINDIR)}" > site.exp
+	echo "set KRB5_SBINDIR {$(KRB5_SBINDIR)}" >> site.exp

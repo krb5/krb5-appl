@@ -1,0 +1,19 @@
+# 
+# Generated makefile dependencies follow.
+#
+$(OUTPRE)ftpd.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  $(SRCTOP)/k5-util.h $(SRCTOP)/libpty/libpty.h $(SRCTOP)/port-sockets.h \
+  $(srcdir)/../arpa/ftp.h $(srcdir)/../arpa/telnet.h \
+  ftpd.c ftpd_var.h pathnames.h secure.h
+$(OUTPRE)ftpcmd.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  $(srcdir)/../arpa/ftp.h $(srcdir)/../arpa/telnet.h \
+  ftpcmd.c ftpd_var.h
+$(OUTPRE)popen.$(OBJEXT): $(BUILDTOP)/autoconf.h ftpd_var.h \
+  popen.c
+$(OUTPRE)vers.$(OBJEXT): vers.c
+$(OUTPRE)glob.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  $(srcdir)/../ftp/ftp_var.h $(srcdir)/../ftp/glob.c
+$(OUTPRE)radix.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../ftp/ftp_var.h \
+  $(srcdir)/../ftp/radix.c
+$(OUTPRE)secure.$(OBJEXT): $(BUILDTOP)/autoconf.h $(srcdir)/../arpa/ftp.h \
+  $(srcdir)/../ftp/secure.c $(srcdir)/../ftp/secure.h

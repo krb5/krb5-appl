@@ -1,0 +1,28 @@
+# 
+# Generated makefile dependencies follow.
+#
+$(OUTPRE)krcp.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/fake-addrinfo.h \
+  $(SRCTOP)/k5-platform.h $(SRCTOP)/k5-util.h $(SRCTOP)/port-sockets.h \
+  $(SRCTOP)/socket-utils.h defines.h krcp.c
+$(OUTPRE)krlogin.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/fake-addrinfo.h $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h \
+  $(SRCTOP)/socket-utils.h defines.h krlogin.c rpaths.h
+$(OUTPRE)krsh.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/fake-addrinfo.h \
+  $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h \
+  defines.h krsh.c
+$(OUTPRE)kcmd.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/fake-addrinfo.h \
+  $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h \
+  defines.h kcmd.c
+$(OUTPRE)forward.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/fake-addrinfo.h $(SRCTOP)/k5-platform.h $(SRCTOP)/port-sockets.h \
+  $(SRCTOP)/socket-utils.h defines.h forward.c
+$(OUTPRE)login.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/k5-platform.h \
+  $(SRCTOP)/libpty/libpty.h login.c loginpaths.h
+$(OUTPRE)krshd.$(OBJEXT): $(BUILDTOP)/autoconf.h $(SRCTOP)/fake-addrinfo.h \
+  $(SRCTOP)/k5-platform.h $(SRCTOP)/k5-util.h $(SRCTOP)/libpty/libpty.h \
+  $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h defines.h \
+  krshd.c loginpaths.h
+$(OUTPRE)krlogind.$(OBJEXT): $(BUILDTOP)/autoconf.h \
+  $(SRCTOP)/fake-addrinfo.h $(SRCTOP)/k5-platform.h $(SRCTOP)/libpty/libpty.h \
+  $(SRCTOP)/port-sockets.h $(SRCTOP)/socket-utils.h defines.h \
+  krlogind.c
