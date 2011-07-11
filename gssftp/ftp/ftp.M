@@ -947,7 +947,7 @@ then forks a shell, using
 .IR popen (3)
 with the argument supplied, and reads from (writes to) stdout (stdin).
 If the shell command includes spaces, the argument must be quoted; e.g.
-``" ls -lt"''.  A particularly useful example of this mechanism is:
+``" ls \-lt"''.  A particularly useful example of this mechanism is:
 ``dir more''.
 .TP
 3.

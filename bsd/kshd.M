@@ -8,7 +8,7 @@
 .SH NAME
 kshd \- kerberized remote shell server
 .SH SYNOPSIS
-.B /usr/local/sbin/kshd 
+.B kshd 
 [
 .B \-kr45ec
 ]
@@ -107,8 +107,8 @@ Ignore authenticator checksums if provided.  This option
 ignore authenticator checksusm presented by current Kerberos clients
 to protect initial connection information; it is the opposite of
 \fB-c\fP.  This option is provided because some older
-clients--particularly clients predating the release of Kerberos V5
-Beta5 (May 1995)--present bogus checksums that prevent Kerberos
+clients -- particularly clients predating the release of Kerberos V5
+Beta5 (May 1995) -- present bogus checksums that prevent Kerberos
 authentication from succeeding in the default mode.
 
 

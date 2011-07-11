@@ -36,7 +36,7 @@
 ftpd \- DARPA Internet File Transfer Protocol server
 .SH SYNOPSIS
 .B ftpd
-[\fB\-A \fP|\fB -a\fP] [\fB\-C\fP] [\fB\-c\fP] [\fB\-d\fP] [\fB-E\fP]
+[\fB\-A \fP|\fB\-a\fP] [\fB\-C\fP] [\fB\-c\fP] [\fB\-d\fP] [\fB\-E\fP]
 [\fB\-l\fP] [\fB\-v\fP] [\fB\-T\fP \fImaxtimeout\fP] [\fB\-t\fP \fItimeout\fP]
 [\fB\-p\fP \fIport\fP] [\fB\-U\fP \fIftpusers-file\fP] [\fB\-u\fP \fIumask\fP]
 [\fB\-r\fP \fIrealm-file\fP] [\fB\-s\fP \fIsrvtab\fP]
@@ -75,7 +75,7 @@ Allow the CCC (Clear Command Channel) command to be used. This allows
 less secure connections, and should probably only be used when debugging.
 .TP
 .B \-d
-Debugging information is written to the syslog.  (Identical to -v)
+Debugging information is written to the syslog.  (Identical to \-v)
 .TP
 .B \-E
 Don't allow passwords to be typed across unencrypted connections.
@@ -90,7 +90,7 @@ other statistics such as the number of bytes transferred will be logged via
 syslog as well.
 .TP
 .B \-v
-Debugging information is written to the syslog.  (Identical to -d)
+Debugging information is written to the syslog.  (Identical to \-d)
 .TP
 \fB\-T\fP \fImaxtimeout\fP
 A client may request a maximum timeout period allowed set to
@@ -191,7 +191,7 @@ give help information
 .sp -1
 .TP
 LIST
-give list files in a directory (``ls -lgA'')
+give list files in a directory (``ls \-lgA'')
 .sp -1
 .TP
 MIC
