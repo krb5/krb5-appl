@@ -797,13 +797,13 @@ printsub(direction, pointer, length)
 			    if (pointer[0] == TELOPT_OLD_ENVIRON) {
 # ifdef	ENV_HACK
 				if (old_env_var == OLD_ENV_VALUE)
-				    fprintf(NetTrace, "\" (VALUE) " + noquote);
+				    fprintf(NetTrace, "%s", "\" (VALUE) " + noquote);
 				else
 # endif
-				    fprintf(NetTrace, "\" VAR " + noquote);
+				    fprintf(NetTrace, "%s", "\" VAR " + noquote);
 			    } else
 #endif /* OLD_ENVIRON */
-				fprintf(NetTrace, "\" VALUE " + noquote);
+				fprintf(NetTrace, "%s", "\" VALUE " + noquote);
 			    noquote = 2;
 			    break;
 
@@ -813,23 +813,23 @@ printsub(direction, pointer, length)
 			    if (pointer[0] == TELOPT_OLD_ENVIRON) {
 # ifdef	ENV_HACK
 				if (old_env_value == OLD_ENV_VAR)
-				    fprintf(NetTrace, "\" (VAR) " + noquote);
+				    fprintf(NetTrace, "%s", "\" (VAR) " + noquote);
 				else
 # endif
-				    fprintf(NetTrace, "\" VALUE " + noquote);
+				    fprintf(NetTrace, "%s", "\" VALUE " + noquote);
 			    } else
 #endif /* OLD_ENVIRON */
-				fprintf(NetTrace, "\" VAR " + noquote);
+				fprintf(NetTrace, "%s", "\" VAR " + noquote);
 			    noquote = 2;
 			    break;
 
 			case ENV_ESC:
-			    fprintf(NetTrace, "\" ESC " + noquote);
+			    fprintf(NetTrace, "%s", "\" ESC " + noquote);
 			    noquote = 2;
 			    break;
 
 			case ENV_USERVAR:
-			    fprintf(NetTrace, "\" USERVAR " + noquote);
+			    fprintf(NetTrace, "%s", "\" USERVAR " + noquote);
 			    noquote = 2;
 			    break;
 
