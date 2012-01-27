@@ -1479,7 +1479,7 @@ void mls(argc, argv)
 {
 	sig_t oldintr;
 	int ointer, i;
-	char *volatile cmd, rmode[1], *dest;
+	char *volatile cmd, rmode[2], *dest;
 
 	if (argc < 2 && !another(&argc, &argv, "remote-files"))
 		goto usage;
@@ -1503,7 +1503,8 @@ usage:
 	oldintr = signal(SIGINT, mabort);
 	(void) setjmp(jabort);
 	for (i = 1; mflag && i < argc-1; ++i) {
-		*rmode = (i == 1) ? 'w' : 'a';
+		rmode[0] = (i == 1) ? 'w' : 'a';
+		rmode[1] = 0;
 		recvrequest(cmd, dest, argv[i], rmode, 0, 0);
 		if (!mflag && fromatty) {
 			ointer = interactive;
