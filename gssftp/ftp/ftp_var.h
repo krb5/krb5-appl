@@ -53,15 +53,6 @@ FILE* fdopen_socket(SOCKET s, char* mode);
 #define PERROR_SOCKET(str) perror(str)
 #endif
 
-#ifdef _WIN32
-typedef void (*sig_t)(int);
-typedef void sigtype;
-#else
-#define sig_t my_sig_t
-#define sigtype krb5_sigtype
-typedef sigtype (*sig_t)();
-#endif
-
 /*
  * FTP global variables.
  */
@@ -167,6 +158,15 @@ struct macel {
 extern int macnum;		/* number of defined macros */
 extern struct macel macros[16];
 extern char macbuf[4096];
+
+#ifdef _WIN32
+typedef void (*sig_t)(int);
+typedef void sigtype;
+#else
+#define sig_t my_sig_t
+#define sigtype krb5_sigtype
+typedef sigtype (*sig_t)();
+#endif
 
 #ifdef DEFINITIONS
 #undef extern
