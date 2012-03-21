@@ -64,6 +64,10 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#ifndef MAXHOSTNAMELEN
+# define MAXHOSTNAMELEN 256
+#endif
+
 int
 main(argc, argv)
      int argc;
