@@ -262,7 +262,7 @@ void setpeer(argc, argv)
 			if (overbose && 
 			    !strncmp(reply_string, "215 TOPS20", 10))
 				printf(
-"Remember to set tenex mode when transfering binary files from this machine.\n");
+"Remember to set tenex mode when transferring binary files from this machine.\n");
 		}
 		verbose = overbose;
 #else
