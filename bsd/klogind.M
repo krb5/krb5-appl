@@ -77,7 +77,7 @@ checksums are validated if presented.  Since it is difficult to remove
 a checksum from an authenticator without making the authenticator
 invalid, this default mode is almost as significant of a security
 improvement as \fB-c\fP if new clients are used.  It has the additional
-advantage of backwards compatability with some clients.
+advantage of backwards compatibility with some clients.
 Unfortunately, clients before Kerberos V5, Beta5, generate invalid
 checksums; if these clients are used, the \fB-i\fP option must be
 used.
