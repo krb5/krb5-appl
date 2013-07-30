@@ -39,6 +39,7 @@ static char sccsid[] = "@(#)domacro.c	1.8 (Berkeley) 9/28/90";
 
 #include <stdio.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #include "ftp_var.h"
 
@@ -53,7 +54,8 @@ void domacro(argc, argv)
 	register int i, j;
 	register char *cp1, *cp2;
 	int count = 2, loopflg = 0;
-	char line2[200];
+	char *saved;
+	size_t saved_len;
 	extern char **glob();
 	struct cmd *getcmd(), *c;
 
@@ -72,8 +74,18 @@ void domacro(argc, argv)
 		code = -1;
 		return;
 	}
-	(void) strncpy(line2, line, sizeof(line2) - 1);
-	line2[sizeof(line2) - 1] = '\0';
+	saved_len = line_len;
+	saved = line;
+	line_len += (macros[i].mac_end - macros[i].mac_start + 500);
+	line = malloc(line_len);
+	if (line == NULL) {
+		printf("'%s': out of memory.\n", argv[1]);
+		line_len = saved_len;
+		line = saved;
+		code = -1;
+		return;
+	}
+	memcpy(line, saved, saved_len);
 TOP:
 	cp1 = macros[i].mac_start;
 	while (cp1 != macros[i].mac_end) {
@@ -94,11 +106,11 @@ TOP:
 				    }
 				    cp1--;
 				    if (argc - 2 >= j) {
-                                        if(cp2 - line + strlen(argv[j+1]) < sizeof(line))
+                                        if(cp2 - line + strlen(argv[j+1]) < line_len)
 					(void) strncpy(cp2, argv[j+1],
-						       sizeof(line) - 1 -
+						       line_len - 1 -
 						       (cp2 - line));
-					line[sizeof(line) - 1] = '\0';
+					line[line_len - 1] = '\0';
 					cp2 += strlen(argv[j+1]);
 				    }
 				    break;
@@ -107,11 +119,11 @@ TOP:
 					loopflg = 1;
 					cp1++;
 					if (count < argc) {
-                                           if(cp2 - line + strlen(argv[count]) < sizeof(line))
+                                           if(cp2 - line + strlen(argv[count]) < line_len)
 					   (void) strncpy(cp2, argv[count],
-							  sizeof(line) - 1 -
+							  line_len - 1 -
 							  (cp2 - line));
-					   line[sizeof(line) - 1] = '\0';
+					   line[line_len - 1] = '\0';
 					   cp2 += strlen(argv[count]);
 					}
 					break;
@@ -148,8 +160,7 @@ TOP:
 			if (bell && c->c_bell) {
 				(void) putchar('\007');
 			}
-			(void) strncpy(line, line2, sizeof(line) - 1);
-			line[sizeof(line) - 1] = '\0';
+			memcpy(line, saved, saved_len);
 			makeargv();
 			argc = margc;
 			argv = margv;
@@ -161,4 +172,8 @@ TOP:
 	if (loopflg && ++count < argc) {
 		goto TOP;
 	}
+	free(line);
+	line_len = saved_len;
+	line = saved;
+	makeargv();
 }
