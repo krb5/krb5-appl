@@ -175,7 +175,7 @@ struct	sockaddr_in myctladdr;
 #ifndef _WIN32
 uid_t	getuid();
 #endif
-sig_t	lostpeer();
+sig_t	intr(), lostpeer();
 off_t	restart_point = 0;
 jmp_buf ptabort;
 
@@ -412,7 +412,11 @@ int login(char *host)
 		return(1);
 	for (n = 0; n < macnum; ++n) {
 		if (!strcmp("init", macros[n].mac_name)) {
-			(void) strlcpy(line, "$init", sizeof(line));
+			free(line);
+			line = strdup("$init");
+			if (line == NULL)
+				intr();
+			line_len = strlen(line) + 1;
 			makeargv();
 			domacro(margc, margv);
 			break;

@@ -116,21 +116,26 @@ another(pargc, pargv, prompt)
 	char ***pargv;
 	char *prompt;
 {
-	size_t len = strlen(line);
+	ssize_t len;
+	size_t tmp_len;
+	char *tmp, *merged;
 	int ret;
 	extern sig_t intr();
 
-	if (len >= sizeof(line) - 3) {
-		printf("sorry, arguments too long\n");
-		intr();
-	}
 	printf("(%s) ", prompt);
-	line[len++] = ' ';
-	if (fgets(&line[len], (signed) sizeof(line) - len, stdin) == NULL)
+	tmp = NULL;
+	if ((len = getinput(&tmp, &tmp_len, stdin)) == -1)
 		intr();
-	len += strlen(&line[len]);
-	if (len > 0 && line[len - 1] == '\n')
-		line[len - 1] = '\0';
+	if ((len > 0) && (tmp[len - 1] == '\n'))
+		tmp[len - 1] = '\0';
+	merged = malloc(line_len + len + 1);
+	if (merged == NULL)
+		intr();
+	snprintf(merged, line_len + len + 1, "%s %s", line, tmp);
+	free(line);
+	free(tmp);
+	line_len += len + 1;
+	line = merged;
 	makeargv();
 	ret = margc > *pargc;
 	*pargc = margc;

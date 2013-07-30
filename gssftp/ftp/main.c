@@ -126,6 +126,9 @@ main(argc, argv)
 	autologin = 1;
 	forward = 0;
 	autoencrypt = 0;
+	line = NULL;
+	line_len = 0;
+	argbuf = NULL;
 	argc--, argv++;
 	while (argc > 0 && **argv == '-') {
 		for (cp = *argv + 1; *cp; cp++) {
@@ -307,7 +310,7 @@ cmdscanner(top)
 	int top;
 {
 	register struct cmd *c;
-	register int l;
+	register ssize_t l;
 
 	if (!top)
 		(void) putchar('\n');
@@ -316,20 +319,14 @@ cmdscanner(top)
 			printf("ftp> ");
 			(void) fflush(stdout);
 		}
-		if (fgets(line, sizeof line, stdin) == NULL)
+		if ((l = getinput(&line, &line_len, stdin)) == -1)
 			quit();
-		l = strlen(line);
 		if (l == 0)
 			break;
 		if (line[--l] == '\n') {
 			if (l == 0)
 				break;
 			line[l] = '\0';
-		} else if (l == sizeof(line) - 2) {
-			printf("sorry, input line too long\n");
-			while ((l = getchar()) != '\n' && l != EOF)
-				/* void */;
-			break;
 		} /* else it was a line without a newline */
 		makeargv();
 		if (margc == 0) {
@@ -403,6 +400,12 @@ void makeargv()
 	margc = 0;
 	argp = margv;
 	stringbase = line;		/* scan from first of buffer */
+	free(argbuf);
+	argbuf = malloc(line_len);
+	if (argbuf == NULL) {
+		printf("out of memory\n");
+		intr(SIGINT);
+	}
 	argbase = argbuf;		/* store from first of buffer */
 	slrflag = 0;
 	while ((*argp++ = slurpstring())) {
@@ -606,4 +609,48 @@ void help(argc, argv)
 			printf("%-*s\t%s\n", HELPINDENT,
 				c->c_name, c->c_help);
 	}
+}
+
+ssize_t getinput(lineptr, lineptrlen, stream)
+	char **lineptr;
+	size_t *lineptrlen;
+	FILE *stream;
+{
+	char buf[200], *tmp;
+	ssize_t len;
+	size_t buflen;
+
+	if ((lineptr == NULL) || (lineptrlen == NULL)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	len = 0;
+	while ((tmp = fgets(buf, sizeof(buf), stream)) != NULL) {
+		buflen = strlen(buf);
+		if ((*lineptr != NULL) && (len + buflen < *lineptrlen)) {
+			strcpy(*lineptr + len, buf);
+			len += buflen;
+		} else {
+			tmp = realloc(*lineptr, len + buflen + 128);
+			if (tmp != NULL) {
+				*lineptr = tmp;
+				*lineptrlen = len + buflen + 128;
+				strcpy(*lineptr + len, buf);
+				len += buflen;
+			} else {
+				errno = ENOMEM;
+				break;
+			}
+		}
+		if ((len > 0) && ((*lineptr)[len - 1] == '\n')) {
+			break;
+		}
+	}
+
+	if (tmp == NULL) {
+		return -1;
+	}
+
+	return len;
 }
